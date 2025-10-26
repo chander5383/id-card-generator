@@ -16,6 +16,14 @@
     const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/GOOGLE_SHEET_ID/export?format=csv&gid=0";
     const id = new URLSearchParams(window.location.search).get("id");
 
+const csvUrl = SHEET_CSV_URL + "&cacheBust=" + Date.now();
+Papa.parse(csvUrl, {
+  download: true,
+  header: true,
+  skipEmptyLines: true,
+  ...
+});
+    
     Papa.parse(SHEET_CSV_URL, {
       download: true,
       header: true,
