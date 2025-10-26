@@ -1,42 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Student Detail</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student ID</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 <body>
-  <div id="student-detail" class="id-card"></div>
+  <main id="student-detail" class="student-detail">
+    Loading student details...
+  </main>
+
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("id");
+    const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/GOOGLE_SHEET_ID/export?format=csv&gid=0";
+    const id = new URLSearchParams(window.location.search).get("id");
 
-    fetch('https://raw.githubusercontent.com/YOUR_USERNAME/id-card-generator/main/students.xlsx')
-      .then(res => res.arrayBuffer())
-      .then(ab => {
-        const wb = XLSX.read(ab, { type: 'array' });
-        const sheet = wb.Sheets[wb.SheetNames[0]];
-        const data = XLSX.utils.sheet_to_json(sheet);
-
+    Papa.parse(SHEET_CSV_URL, {
+      download: true,
+      header: true,
+      skipEmptyLines: true,
+      complete: function(results) {
+        const data = results.data;
         const student = data.find(s => s["ID No"] === id);
-        if (student) {
-          document.getElementById('student-detail').innerHTML = `
-            <img src="${student['Logo']}" class="logo watermark">
-            <div class="college-name">${student['College Name']}</div>
-            <p><strong>ID No:</strong> ${student['ID No']}</p>
-            <p><strong>Name:</strong> ${student['Name']}</p>
-            <p><strong>Father:</strong> ${student['Father']}</p>
-            <p><strong>Branch:</strong> ${student['Branch']}</p>
-            <p><strong>Phone:</strong> ${student['Phone']}</p>
-            <img src="${student['Photo']}" class="photo" />
-          `;
-        } else {
-          document.getElementById('student-detail').innerText = "Student not found!";
+        const div = document.getElementById("student-detail");
+
+        if (!student) {
+          div.innerText = "❌ Student not found.";
+          return;
         }
-      });
+
+        div.innerHTML = `
+          <div class="id-card single">
+            ${student['Logo'] ? `<img src="${student['Logo']}" class="logo watermark">` : ''}
+            <div class="college-name">${student['College Name']}</div>
+            <div class="photo-box">
+              ${student['Photo'] ? `<img src="${student['Photo']}" alt="photo">` : ''}
+            </div>
+            <div class="info">
+              <p><strong>ID No:</strong> ${student['ID No']}</p>
+              <p><strong>Name:</strong> ${student['Name']}</p>
+              <p><strong>Father:</strong> ${student['Father']}</p>
+              <p><strong>Branch:</strong> ${student['Branch']}</p>
+              <p><strong>Phone:</strong> ${student['Phone']}</p>
+            </div>
+          </div>
+        `;
+      }
+    });
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </body>
 </html>
-
