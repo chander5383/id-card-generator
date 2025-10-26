@@ -1,5 +1,5 @@
 // Replace with your Google Sheet CSV export link
-const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/18voFhmnqCNklz_vs4U9cdZDXqPonUu5V16dHpakOBz0/export?format=csv&gid=1223503248";
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1mFO4VfkTJRbWyToBP2BSobb44HVDVfPrL04R7UdflYg/export?format=csv&gid=0";
 
 function loadCsvAndGenerate() {
   Papa.parse(SHEET_CSV_URL, {
