@@ -1,55 +1,96 @@
 body {
-  font-family: Arial, sans-serif;
-  background: #f0f0f0;
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: #f7f7f7;
+  color: #333;
+}
+
+header, footer {
+  text-align: center;
+  padding: 10px;
+  background: #0055aa;
+  color: white;
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 20px;
   padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-items: center;
 }
 
 .id-card {
-  width: 90%;
-  max-width: 800px;
-  background: #fff;
-  border: 2px solid #000;
-  border-radius: 8px;
-  padding: 20px;
-  margin: 15px 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 15px;
+  max-width: 300px;
+  text-align: center;
   position: relative;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-.logo.watermark {
-  position: absolute;
-  opacity: 0.15;
-  width: 60%;
-  left: 20%;
-  top: 25%;
-  z-index: 0;
+.id-card.single {
+  max-width: 380px;
+  margin: 30px auto;
 }
 
 .college-name {
-  text-align: center;
-  font-size: 20px;
-  font-weight: bold;
-  color: #003366;
-  z-index: 1;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #004080;
+  margin-bottom: 10px;
 }
 
-.photo img {
-  width: 120px;
-  height: 140px;
-  border: 2px solid #333;
-  border-radius: 6px;
+.photo-box img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
   object-fit: cover;
+  margin: 10px 0;
 }
 
+.info p {
+  margin: 3px 0;
+}
+
+.qr {
+  margin-top: 10px;
+}
+
+.view-btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 14px;
+  background: #0055aa;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+.view-btn:hover {
+  background: #003f80;
+}
+
+.logo.watermark {
+  width: 50px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  opacity: 0.4;
+}
+
+/* Responsive Design */
 @media (max-width: 600px) {
   .id-card {
-    font-size: 14px;
+    width: 90%;
+    padding: 10px;
   }
-  .photo img {
-    width: 90px;
-    height: 100px;
+  .photo-box img {
+    width: 80px;
+    height: 80px;
+  }
+  .college-name {
+    font-size: 1rem;
   }
 }
