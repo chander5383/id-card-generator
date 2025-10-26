@@ -1,59 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Student ID</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 <body>
-  <main id="student-detail" class="student-detail">
-    Loading student details...
-  </main>
+  <main id="student-detail" class="student-detail">Loading student details...</main>
 
   <script>
-    const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/GOOGLE_SHEET_ID/export?format=csv&gid=0";
-    const id = new URLSearchParams(window.location.search).get("id");
+    // ✅ Tumhara Google Sheet CSV link
+    const SHEET_CSV_URL =
+      "https://docs.google.com/spreadsheets/d/1mFO4VfkTJRbWyToBP2BSobb44HVDVfPrL04R7UdflYg/export?format=csv&gid=0";
 
-const csvUrl = SHEET_CSV_URL + "&cacheBust=" + Date.now();
-Papa.parse(csvUrl, {
-  download: true,
-  header: true,
-  skipEmptyLines: true,
-  ...
-});
-    
-    Papa.parse(SHEET_CSV_URL, {
+    const id = new URLSearchParams(window.location.search).get("id");
+    console.log("Student ID from URL:", id);
+
+    const csvUrl = SHEET_CSV_URL + "&cacheBust=" + Date.now();
+
+    Papa.parse(csvUrl, {
       download: true,
       header: true,
       skipEmptyLines: true,
-      complete: function(results) {
-        const data = results.data;
-        const student = data.find(s => s["ID No"] === id);
-        const div = document.getElementById("student-detail");
+      complete: function (results) {
+        console.log("Data loaded:", results.data);
 
-        if (!student) {
-          div.innerText = "❌ Student not found.";
-          return;
+        const data = results.data.map(row => {
+          const clean = {};
+          Object.keys(row).forEach(k => clean[k.trim().toLowerCase()] = (row[k] || "").trim());
+          return clean;
+        });
+
+        const student = data.find(s =>
+          (s["id no"] && s["id no"].trim() === id.trim()) ||
+          (s["id"] && s["id"].trim() === id.trim()) ||
+          (s["roll"] && s["roll"].trim() === id.trim())
+        );
+
+        const container = document.getElementById("student-detail");
+
+        if (student) {
+          container.innerHTML = `
+            <div class="id-card single">
+              ${student["logo"] ? `<img src="${student["logo"]}" class="logo watermark">` : ""}
+              <div class="college-name">${student["college name"] || ""}</div>
+              <div class="photo-box">
+                ${student["photo"] ? `<img src="${student["photo"]}" alt="photo">` : ""}
+              </div>
+              <div class="info">
+                <p><strong>ID No:</strong> ${student["id no"] || student["id"] || ""}</p>
+                <p><strong>Name:</strong> ${student["name"] || ""}</p>
+                <p><strong>Father:</strong> ${student["father"] || ""}</p>
+                <p><strong>Branch:</strong> ${student["branch"] || ""}</p>
+                <p><strong>Phone:</strong> ${student["phone"] || ""}</p>
+              </div>
+            </div>
+          `;
+        } else {
+          container.innerHTML = `
+            <p style="text-align:center;color:red;font-weight:bold;">
+              ❌ Student not found.<br>
+              (Check if "ID No" in Sheet matches URL value.)
+            </p>`;
         }
-
-        div.innerHTML = `
-          <div class="id-card single">
-            ${student['Logo'] ? `<img src="${student['Logo']}" class="logo watermark">` : ''}
-            <div class="college-name">${student['College Name']}</div>
-            <div class="photo-box">
-              ${student['Photo'] ? `<img src="${student['Photo']}" alt="photo">` : ''}
-            </div>
-            <div class="info">
-              <p><strong>ID No:</strong> ${student['ID No']}</p>
-              <p><strong>Name:</strong> ${student['Name']}</p>
-              <p><strong>Father:</strong> ${student['Father']}</p>
-              <p><strong>Branch:</strong> ${student['Branch']}</p>
-              <p><strong>Phone:</strong> ${student['Phone']}</p>
-            </div>
-          </div>
-        `;
+      },
+      error: function (err) {
+        console.error("PapaParse error:", err);
+        document.getElementById("student-detail").textContent = "❌ Error loading sheet.";
       }
     });
   </script>
