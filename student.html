@@ -1,1 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Detail</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="student-detail" class="id-card"></div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    fetch('https://raw.githubusercontent.com/YOUR_USERNAME/id-card-generator/main/students.xlsx')
+      .then(res => res.arrayBuffer())
+      .then(ab => {
+        const wb = XLSX.read(ab, { type: 'array' });
+        const sheet = wb.Sheets[wb.SheetNames[0]];
+        const data = XLSX.utils.sheet_to_json(sheet);
+
+        const student = data.find(s => s["ID No"] === id);
+        if (student) {
+          document.getElementById('student-detail').innerHTML = `
+            <img src="${student['Logo']}" class="logo watermark">
+            <div class="college-name">${student['College Name']}</div>
+            <p><strong>ID No:</strong> ${student['ID No']}</p>
+            <p><strong>Name:</strong> ${student['Name']}</p>
+            <p><strong>Father:</strong> ${student['Father']}</p>
+            <p><strong>Branch:</strong> ${student['Branch']}</p>
+            <p><strong>Phone:</strong> ${student['Phone']}</p>
+            <img src="${student['Photo']}" class="photo" />
+          `;
+        } else {
+          document.getElementById('student-detail').innerText = "Student not found!";
+        }
+      });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</body>
+</html>
 
