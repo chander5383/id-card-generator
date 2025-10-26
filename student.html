@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Student ID</title>
+  <title>Student Full ID</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <!-- DataMatrix generator -->
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 </head>
 <body>
   <main id="student-detail" class="student-detail">Loading student details...</main>
 
   <script>
-    // ✅ Tumhara Google Sheet CSV link
     const SHEET_CSV_URL =
       "https://docs.google.com/spreadsheets/d/1mFO4VfkTJRbWyToBP2BSobb44HVDVfPrL04R7UdflYg/export?format=csv&gid=0";
 
     const id = new URLSearchParams(window.location.search).get("id");
-    console.log("Student ID from URL:", id);
 
     const csvUrl = SHEET_CSV_URL + "&cacheBust=" + Date.now();
 
@@ -25,8 +25,6 @@
       header: true,
       skipEmptyLines: true,
       complete: function (results) {
-        console.log("Data loaded:", results.data);
-
         const data = results.data.map(row => {
           const clean = {};
           Object.keys(row).forEach(k => clean[k.trim().toLowerCase()] = (row[k] || "").trim());
@@ -41,30 +39,61 @@
 
         const container = document.getElementById("student-detail");
 
-        if (student) {
-          container.innerHTML = `
-            <div class="id-card single">
-              ${student["logo"] ? `<img src="${student["logo"]}" class="logo watermark">` : ""}
-              <div class="college-name">${student["college name"] || ""}</div>
-              <div class="photo-box">
-                ${student["photo"] ? `<img src="${student["photo"]}" alt="photo">` : ""}
-              </div>
-              <div class="info">
-                <p><strong>ID No:</strong> ${student["id no"] || student["id"] || ""}</p>
-                <p><strong>Name:</strong> ${student["name"] || ""}</p>
-                <p><strong>Father:</strong> ${student["father"] || ""}</p>
-                <p><strong>Branch:</strong> ${student["branch"] || ""}</p>
-                <p><strong>Phone:</strong> ${student["phone"] || ""}</p>
-              </div>
-            </div>
-          `;
-        } else {
-          container.innerHTML = `
-            <p style="text-align:center;color:red;font-weight:bold;">
-              ❌ Student not found.<br>
-              (Check if "ID No" in Sheet matches URL value.)
-            </p>`;
+        if (!student) {
+          container.innerHTML = `<p style="text-align:center;color:red;font-weight:bold;">❌ Student not found.</p>`;
+          return;
         }
+
+        // Create QR Data text
+        const qrData = `Name: ${student["name"]}
+ID: ${student["id no"]}
+Roll: ${student["roll"]}
+Branch: ${student["branch"]}
+College: ${student["college name"]}`;
+
+        container.innerHTML = `
+          <div class="id-card single">
+            ${student["logo"] ? `<img src="${student["logo"]}" class="logo watermark">` : ""}
+            <div class="college-name">${student["college name"] || ""}</div>
+            <div class="photo-box">
+              ${student["photo"] ? `<img src="${student["photo"]}" alt="photo">` : ""}
+            </div>
+            <div class="info">
+              <p><strong>ID No:</strong> ${student["id no"]}</p>
+              <p><strong>Name:</strong> ${student["name"]}</p>
+              <p><strong>Father:</strong> ${student["father"]}</p>
+              <p><strong>Mother:</strong> ${student["mother"]}</p>
+              <p><strong>Roll:</strong> ${student["roll"]}</p>
+              <p><strong>Course:</strong> ${student["course"]}</p>
+              <p><strong>Branch:</strong> ${student["branch"]}</p>
+              <p><strong>DOB:</strong> ${student["dob"]}</p>
+              <p><strong>Session:</strong> ${student["session"]}</p>
+              <p><strong>Address:</strong> ${student["address"]}</p>
+              <p><strong>Phone:</strong> ${student["phone"]}</p>
+              <p><strong>Valid Upto:</strong> ${student["valid upto"]}</p>
+            </div>
+            <div class="qr"><canvas id="qrCanvas"></canvas></div>
+            <a id="downloadQR" class="download-btn" href="#">Download QR</a>
+          </div>
+        `;
+
+        // ✅ Generate DataMatrix QR
+        const canvas = document.getElementById("qrCanvas");
+        JsBarcode(canvas, qrData, {
+          format: "datamatrix",
+          lineColor: "#000",
+          width: 3,
+          height: 3,
+          displayValue: false
+        });
+
+        // ✅ Add download functionality
+        document.getElementById("downloadQR").addEventListener("click", function () {
+          const link = document.createElement("a");
+          link.download = `${student["id no"] || "qr"}.png`;
+          link.href = canvas.toDataURL();
+          link.click();
+        });
       },
       error: function (err) {
         console.error("PapaParse error:", err);
