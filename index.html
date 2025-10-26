@@ -1,71 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Student ID</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student ID Cards</title>
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
 </head>
 <body>
-  <main id="student-detail" class="student-detail">Loading student details...</main>
-
-  <script>
-    // ✅ Tumhara Google Sheet CSV link
-    const SHEET_CSV_URL =
-      "https://docs.google.com/spreadsheets/d/1mFO4VfkTJRbWyToBP2BSobb44HVDVfPrL04R7UdflYg/export?format=csv&gid=0";
-
-    // URL se ?id= value lena
-    const id = new URLSearchParams(window.location.search).get("id");
-
-    Papa.parse(SHEET_CSV_URL, {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      complete: function (results) {
-        const data = results.data.map(row => {
-          const clean = {};
-          Object.keys(row).forEach(k => clean[k.trim().toLowerCase()] = (row[k] || "").trim());
-          return clean;
-        });
-
-        // Lowercase comparison for reliability
-        const student = data.find(
-          s => s["ID No"] === id || s["id"] === id || s["roll"] === id
-        );
-
-        const container = document.getElementById("student-detail");
-
-        if (student) {
-          container.innerHTML = `
-            <div class="id-card single">
-              ${student["logo"] ? `<img src="${student["logo"]}" class="logo watermark">` : ""}
-              <div class="college-name">${student["college name"] || ""}</div>
-              <div class="photo-box">
-                ${student["photo"] ? `<img src="${student["photo"]}" alt="photo">` : ""}
-              </div>
-              <div class="info">
-                <p><strong>ID No:</strong> ${student["id no"] || student["id"] || ""}</p>
-                <p><strong>Name:</strong> ${student["name"] || ""}</p>
-                <p><strong>Father:</strong> ${student["father"] || ""}</p>
-                <p><strong>Branch:</strong> ${student["branch"] || ""}</p>
-                <p><strong>Phone:</strong> ${student["phone"] || ""}</p>
-              </div>
-            </div>
-          `;
-        } else {
-          container.innerHTML = `
-            <p style="text-align:center;color:red;font-weight:bold;">
-              ❌ Student not found.<br>
-              (Check if "ID No" in Sheet matches URL value.)
-            </p>`;
-        }
-      },
-      error: function (err) {
-        document.getElementById("student-detail").textContent = "❌ Error loading sheet.";
-        console.error(err);
-      },
-    });
-  </script>
+  <header><h1>🎓 Student ID Cards</h1></header>
+  <main><div id="cards" class="card-container">Loading...</div></main>
+  <footer>© 2025 ID Generator</footer>
+  <script src="script.js"></script>
 </body>
 </html>
