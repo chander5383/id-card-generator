@@ -1,96 +1,119 @@
+/* Base */
 body {
   margin: 0;
   font-family: "Poppins", sans-serif;
-  background: #f7f7f7;
+  background: #f2f5f9;
   color: #333;
 }
 
+/* Header & Footer */
 header, footer {
   text-align: center;
+  background: #0a58ca;
+  color: #fff;
   padding: 10px;
-  background: #0055aa;
-  color: white;
 }
 
+footer {
+  font-size: 0.9rem;
+}
+
+/* Card Container */
 .card-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-  gap: 20px;
-  padding: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  padding: 30px;
   justify-items: center;
 }
 
+/* Individual Card */
 .id-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  padding: 15px;
-  max-width: 300px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
   text-align: center;
-  position: relative;
+  padding: 20px;
+  max-width: 300px;
+  transition: transform 0.2s;
 }
 
+.id-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Single full view card */
 .id-card.single {
-  max-width: 380px;
-  margin: 30px auto;
+  max-width: 420px;
+  margin: 40px auto;
+  padding: 30px;
 }
 
+/* College name */
 .college-name {
   font-weight: 700;
-  font-size: 1.2rem;
   color: #004080;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
 }
 
+/* Photo */
 .photo-box img {
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
   margin: 10px 0;
+  border: 2px solid #ddd;
 }
 
+/* Info */
 .info p {
-  margin: 3px 0;
+  margin: 5px 0;
+  font-size: 0.9rem;
+  text-align: left;
+  padding-left: 15%;
 }
 
+/* Logo */
+.logo.watermark {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 60px;
+  opacity: 0.35;
+}
+
+/* QR */
 .qr {
   margin-top: 10px;
+  display: flex;
+  justify-content: center;
 }
 
-.view-btn {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 8px 14px;
-  background: #0055aa;
-  color: white;
-  text-decoration: none;
+/* Buttons */
+.view-btn, .download-btn {
+  background: #0a58ca;
+  color: #fff;
+  padding: 8px 15px;
   border-radius: 8px;
-  transition: 0.2s;
-}
-.view-btn:hover {
-  background: #003f80;
-}
-
-.logo.watermark {
-  width: 50px;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  opacity: 0.4;
+  text-decoration: none;
+  margin-top: 10px;
+  display: inline-block;
+  transition: background 0.2s;
 }
 
-/* Responsive Design */
+.view-btn:hover, .download-btn:hover {
+  background: #063c8c;
+}
+
+/* Responsive */
 @media (max-width: 600px) {
-  .id-card {
+  .id-card.single {
     width: 90%;
-    padding: 10px;
+    padding: 15px;
   }
-  .photo-box img {
-    width: 80px;
-    height: 80px;
-  }
-  .college-name {
-    font-size: 1rem;
+  .info p {
+    padding-left: 5%;
   }
 }
