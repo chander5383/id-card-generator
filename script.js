@@ -1,5 +1,4 @@
 // ✅ Student ID Card Loader Script
-
 const SHEET_CSV_URL =
   "https://docs.google.com/spreadsheets/d/1mFO4VfkTJRbWyToBP2BSobb44HVDVfPrL04R7UdflYg/export?format=csv&gid=0";
 
@@ -43,8 +42,8 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="qr">
               <img src="https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(
                 window.location.origin +
-                  window.location.pathname.replace("index.html", "") +
-                  "student.html?id=" +
+                  window.location.pathname.replace('index.html', '') +
+                  'student.html?id=' +
                   s["id no"]
               )}&size=100x100" alt="QR" />
             </div>
