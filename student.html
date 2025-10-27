@@ -6,8 +6,7 @@
   <title>Student Full ID</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-  <!-- DataMatrix generator -->
-  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 </head>
 <body>
   <main id="student-detail" class="student-detail">Loading student details...</main>
@@ -15,9 +14,7 @@
   <script>
     const SHEET_CSV_URL =
       "https://docs.google.com/spreadsheets/d/1mFO4VfkTJRbWyToBP2BSobb44HVDVfPrL04R7UdflYg/export?format=csv&gid=0";
-
     const id = new URLSearchParams(window.location.search).get("id");
-
     const csvUrl = SHEET_CSV_URL + "&cacheBust=" + Date.now();
 
     Papa.parse(csvUrl, {
@@ -25,78 +22,76 @@
       header: true,
       skipEmptyLines: true,
       complete: function (results) {
-        const data = results.data.map(row => {
+        const data = results.data.map(r => {
           const clean = {};
-          Object.keys(row).forEach(k => clean[k.trim().toLowerCase()] = (row[k] || "").trim());
+          Object.keys(r).forEach(k => clean[k.trim().toLowerCase()] = (r[k] || "").trim());
           return clean;
         });
 
-        const student = data.find(s =>
-          (s["id no"] && s["id no"].trim() === id.trim()) ||
-          (s["id"] && s["id"].trim() === id.trim()) ||
-          (s["roll"] && s["roll"].trim() === id.trim())
+        const s = data.find(st =>
+          (st["id no"] && st["id no"].trim() === id.trim()) ||
+          (st["id"] && st["id"].trim() === id.trim()) ||
+          (st["roll"] && st["roll"].trim() === id.trim())
         );
 
         const container = document.getElementById("student-detail");
 
-        if (!student) {
+        if (!s) {
           container.innerHTML = `<p style="text-align:center;color:red;font-weight:bold;">❌ Student not found.</p>`;
           return;
         }
 
-        // Create QR Data text
-        const qrData = `Name: ${student["name"]}
-ID: ${student["id no"]}
-Roll: ${student["roll"]}
-Branch: ${student["branch"]}
-College: ${student["college name"]}`;
-
+        // Layout build
         container.innerHTML = `
           <div class="id-card single">
-            ${student["logo"] ? `<img src="${student["logo"]}" class="logo watermark">` : ""}
-            <div class="college-name">${student["college name"] || ""}</div>
+            ${s["logo"] ? `<img src="${s["logo"]}" class="logo watermark">` : ""}
+            <div class="college-name">${s["college name"] || ""}</div>
+            <div class="qr"><canvas id="qrCanvas"></canvas></div>
             <div class="photo-box">
-              ${student["photo"] ? `<img src="${student["photo"]}" alt="photo">` : ""}
+              ${s["photo"] ? `<img src="${s["photo"]}" alt="photo">` : ""}
             </div>
             <div class="info">
-              <p><strong>ID No:</strong> ${student["id no"]}</p>
-              <p><strong>Name:</strong> ${student["name"]}</p>
-              <p><strong>Father:</strong> ${student["father"]}</p>
-              <p><strong>Mother:</strong> ${student["mother"]}</p>
-              <p><strong>Roll:</strong> ${student["roll"]}</p>
-              <p><strong>Course:</strong> ${student["course"]}</p>
-              <p><strong>Branch:</strong> ${student["branch"]}</p>
-              <p><strong>DOB:</strong> ${student["dob"]}</p>
-              <p><strong>Session:</strong> ${student["session"]}</p>
-              <p><strong>Address:</strong> ${student["address"]}</p>
-              <p><strong>Phone:</strong> ${student["phone"]}</p>
-              <p><strong>Valid Upto:</strong> ${student["valid upto"]}</p>
+              <p><strong>ID No:</strong> ${s["id no"]}</p>
+              <p><strong>Name:</strong> ${s["name"]}</p>
+              <p><strong>Father:</strong> ${s["father"]}</p>
+              <p><strong>Mother:</strong> ${s["mother"]}</p>
+              <p><strong>Roll:</strong> ${s["roll"]}</p>
+              <p><strong>Course:</strong> ${s["course"]}</p>
+              <p><strong>Branch:</strong> ${s["branch"]}</p>
+              <p><strong>DOB:</strong> ${s["dob"]}</p>
+              <p><strong>Session:</strong> ${s["session"]}</p>
+              <p><strong>Address:</strong> ${s["address"]}</p>
+              <p><strong>Phone:</strong> ${s["phone"]}</p>
+              <p><strong>Valid Upto:</strong> ${s["valid upto"]}</p>
             </div>
-            <div class="qr"><canvas id="qrCanvas"></canvas></div>
             <a id="downloadQR" class="download-btn" href="#">Download QR</a>
           </div>
         `;
 
-        // ✅ Generate DataMatrix QR
+        // ✅ Generate QR (DataMatrix-style using QRCode.js)
+        const qrData = `
+          ID: ${s["id no"]}
+          Name: ${s["name"]}
+          Branch: ${s["branch"]}
+          College: ${s["college name"]}
+          Phone: ${s["phone"]}
+        `;
         const canvas = document.getElementById("qrCanvas");
-        JsBarcode(canvas, qrData, {
-          format: "datamatrix",
-          lineColor: "#000",
-          width: 3,
-          height: 3,
-          displayValue: false
+        QRCode.toCanvas(canvas, qrData, { width: 150, margin: 2 }, function (error) {
+          if (error) console.error(error);
         });
 
-        // ✅ Add download functionality
-        document.getElementById("downloadQR").addEventListener("click", function () {
+        // ✅ Download QR on click
+        document.getElementById("downloadQR").addEventListener("click", function (e) {
+          e.preventDefault();
           const link = document.createElement("a");
-          link.download = `${student["id no"] || "qr"}.png`;
-          link.href = canvas.toDataURL();
+          link.download = `${s["id no"] || "qr"}.png`;
+          link.href = document.getElementById("qrCanvas").toDataURL("image/png");
           link.click();
         });
       },
       error: function (err) {
-        console.error("PapaParse error:", err);
+        console.error(err);
         document.getElementById("student-detail").textContent = "❌ Error loading sheet.";
       }
     });
