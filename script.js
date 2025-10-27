@@ -1,158 +1,65 @@
-/* Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+// ✅ Student ID Card Loader Script
 
-body {
-  font-family: "Poppins", sans-serif;
-  background: #eef3f9;
-  color: #222;
-}
+const SHEET_CSV_URL =
+  "https://docs.google.com/spreadsheets/d/1mFO4VfkTJRbWyToBP2BSobb44HVDVfPrL04R7UdflYg/export?format=csv&gid=0";
 
-/* Header and Footer */
-header, footer {
-  text-align: center;
-  background: #0a58ca;
-  color: #fff;
-  padding: 10px 0;
-}
+document.addEventListener("DOMContentLoaded", () => {
+  const container = document.getElementById("cards");
+  container.innerHTML = "Loading...";
 
-footer {
-  font-size: 0.9rem;
-}
+  Papa.parse(SHEET_CSV_URL, {
+    download: true,
+    header: true,
+    skipEmptyLines: true,
+    complete: (results) => {
+      const data = results.data.map((row) => {
+        const clean = {};
+        Object.keys(row).forEach((k) => {
+          clean[k.trim().toLowerCase()] = (row[k] || "").trim();
+        });
+        return clean;
+      });
 
-/* ========== CARD GRID ========== */
-.card-container {
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
-  flex-wrap: wrap;
-  gap: 30px;
-  padding: 40px 20px;
-}
+      if (!data || data.length === 0) {
+        container.innerHTML =
+          "<p style='color:red;text-align:center;'>❌ No student data found.</p>";
+        return;
+      }
 
-/* ========== CARD ========== */
-.id-card {
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  text-align: center;
-  width: 320px;
-  padding: 20px;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.2s ease;
-}
-
-.id-card:hover {
-  transform: translateY(-5px);
-}
-
-.id-card.single {
-  width: 420px;
-  max-width: 95%;
-  margin: 40px auto;
-  padding: 35px 25px;
-}
-
-/* Watermark Logo */
-.id-card::before {
-  content: "";
-  background: url('') no-repeat center;
-  background-size: 200px;
-  opacity: 0.08;
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-
-/* Apply dynamic watermark logo in JS */
-.id-card.has-watermark::before {
-  opacity: 0.08;
-}
-
-/* College Name */
-.college-name {
-  font-weight: 700;
-  color: #004080;
-  margin-bottom: 8px;
-  font-size: 1.1rem;
-  z-index: 1;
-}
-
-/* Photo */
-.photo-box {
-  display: flex;
-  justify-content: center;
-  z-index: 1;
-}
-.photo-box img {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #ccc;
-}
-
-/* Info */
-.info {
-  text-align: left;
-  margin-top: 15px;
-  padding: 0 10%;
-  z-index: 1;
-}
-.info p {
-  margin: 5px 0;
-  font-size: 0.9rem;
-}
-
-/* Logo */
-.logo.watermark {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 60px;
-  opacity: 0.5;
-  pointer-events: none; /* Disable hover move */
-}
-
-/* QR */
-.qr {
-  display: flex;
-  justify-content: center;
-  margin: 15px 0;
-  z-index: 1;
-}
-
-/* Buttons */
-.view-btn, .download-btn {
-  background: #0a58ca;
-  color: #fff;
-  padding: 8px 15px;
-  border-radius: 8px;
-  text-decoration: none;
-  margin-top: 5px;
-  display: inline-block;
-  transition: background 0.3s;
-  z-index: 1;
-}
-
-.view-btn:hover, .download-btn:hover {
-  background: #063b8b;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .id-card {
-    width: 90%;
-  }
-  .id-card.single {
-    width: 90%;
-    margin-top: 20px;
-  }
-}
+      container.innerHTML = data
+        .map(
+          (s) => `
+          <div class="id-card">
+            ${s["logo"] ? `<img src="${s["logo"]}" class="logo watermark">` : ""}
+            <div class="college-name">${s["college name"] || ""}</div>
+            <div class="photo-box">
+              ${s["photo"] ? `<img src="${s["photo"]}" alt="photo">` : ""}
+            </div>
+            <div class="info">
+              <p><strong>ID:</strong> ${s["id no"]}</p>
+              <p><strong>Name:</strong> ${s["name"]}</p>
+              <p><strong>Branch:</strong> ${s["branch"]}</p>
+            </div>
+            <div class="qr">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(
+                window.location.origin +
+                  window.location.pathname.replace("index.html", "") +
+                  "student.html?id=" +
+                  s["id no"]
+              )}&size=100x100" alt="QR" />
+            </div>
+            <a class="view-btn" href="student.html?id=${encodeURIComponent(
+              s["id no"]
+            )}">View Full ID</a>
+          </div>
+        `
+        )
+        .join("");
+    },
+    error: (err) => {
+      console.error("Error loading sheet:", err);
+      container.innerHTML =
+        "<p style='color:red;text-align:center;'>❌ Error loading Google Sheet.</p>";
+    },
+  });
+});
