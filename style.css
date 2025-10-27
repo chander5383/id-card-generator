@@ -1,52 +1,60 @@
-/* Base */
-body {
+/* Reset & Body */
+* {
+  box-sizing: border-box;
   margin: 0;
-  font-family: "Poppins", sans-serif;
-  background: #f2f5f9;
-  color: #333;
+  padding: 0;
 }
 
-/* Header & Footer */
+body {
+  font-family: "Poppins", sans-serif;
+  background: #eef3f9;
+  color: #222;
+}
+
+/* Header Footer */
 header, footer {
   text-align: center;
   background: #0a58ca;
   color: #fff;
-  padding: 10px;
+  padding: 10px 0;
 }
 
 footer {
   font-size: 0.9rem;
 }
 
-/* Card Container */
+/* Card grid */
 .card-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 25px;
-  padding: 30px;
-  justify-items: center;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
 }
 
-/* Individual Card */
+/* Card look */
 .id-card {
   background: #fff;
   border-radius: 14px;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   text-align: center;
   padding: 20px;
-  max-width: 300px;
-  transition: transform 0.2s;
+  width: 300px;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .id-card:hover {
   transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 
-/* Single full view card */
 .id-card.single {
-  max-width: 420px;
+  width: 400px;
+  max-width: 95%;
   margin: 40px auto;
-  padding: 30px;
+  padding: 30px 20px;
 }
 
 /* College name */
@@ -58,37 +66,44 @@ footer {
 }
 
 /* Photo */
+.photo-box {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+}
 .photo-box img {
   width: 120px;
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  margin: 10px 0;
-  border: 2px solid #ddd;
+  border: 2px solid #ccc;
 }
 
 /* Info */
+.info {
+  text-align: left;
+  margin-top: 15px;
+  padding: 0 10%;
+}
 .info p {
   margin: 5px 0;
   font-size: 0.9rem;
-  text-align: left;
-  padding-left: 15%;
 }
 
 /* Logo */
 .logo.watermark {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 10px;
+  right: 10px;
   width: 60px;
-  opacity: 0.35;
+  opacity: 0.4;
 }
 
-/* QR */
+/* QR area */
 .qr {
-  margin-top: 10px;
   display: flex;
   justify-content: center;
+  margin: 20px 0;
 }
 
 /* Buttons */
@@ -98,22 +113,27 @@ footer {
   padding: 8px 15px;
   border-radius: 8px;
   text-decoration: none;
-  margin-top: 10px;
+  margin-top: 5px;
   display: inline-block;
-  transition: background 0.2s;
+  transition: background 0.3s;
 }
-
 .view-btn:hover, .download-btn:hover {
-  background: #063c8c;
+  background: #063b8b;
 }
 
 /* Responsive */
-@media (max-width: 600px) {
-  .id-card.single {
+@media (max-width: 768px) {
+  .id-card {
     width: 90%;
-    padding: 15px;
   }
-  .info p {
-    padding-left: 5%;
+  .id-card.single {
+    margin-top: 20px;
+  }
+  .photo-box img {
+    width: 100px;
+    height: 100px;
+  }
+  .info {
+    padding: 0 5%;
   }
 }
