@@ -15,16 +15,15 @@
     const SHEET_CSV_URL =
       "https://docs.google.com/spreadsheets/d/1mFO4VfkTJRbWyToBP2BSobb44HVDVfPrL04R7UdflYg/export?format=csv&gid=0";
     const id = new URLSearchParams(window.location.search).get("id");
-    const csvUrl = SHEET_CSV_URL + "&cacheBust=" + Date.now();
 
-    Papa.parse(csvUrl, {
+    Papa.parse(SHEET_CSV_URL, {
       download: true,
       header: true,
       skipEmptyLines: true,
-      complete: function (results) {
-        const data = results.data.map(r => {
+      complete: (results) => {
+        const data = results.data.map(row => {
           const clean = {};
-          Object.keys(r).forEach(k => clean[k.trim().toLowerCase()] = (r[k] || "").trim());
+          Object.keys(row).forEach(k => clean[k.trim().toLowerCase()] = (row[k] || "").trim());
           return clean;
         });
 
@@ -41,9 +40,18 @@
           return;
         }
 
-        // Layout build
+        // QR Data
+        const qrData = `
+ID: ${s["id no"]}
+Name: ${s["name"]}
+Branch: ${s["branch"]}
+College: ${s["college name"]}
+Phone: ${s["phone"]}
+        `;
+
+        // Create card layout
         container.innerHTML = `
-          <div class="id-card single">
+          <div class="id-card single has-watermark" style="--watermark:url('${s["logo"] || ""}')">
             ${s["logo"] ? `<img src="${s["logo"]}" class="logo watermark">` : ""}
             <div class="college-name">${s["college name"] || ""}</div>
             <div class="qr"><canvas id="qrCanvas"></canvas></div>
@@ -68,32 +76,21 @@
           </div>
         `;
 
-        // ✅ Generate QR (DataMatrix-style using QRCode.js)
-        const qrData = `
-          ID: ${s["id no"]}
-          Name: ${s["name"]}
-          Branch: ${s["branch"]}
-          College: ${s["college name"]}
-          Phone: ${s["phone"]}
-        `;
+        // ✅ Generate QR
         const canvas = document.getElementById("qrCanvas");
-        QRCode.toCanvas(canvas, qrData, { width: 150, margin: 2 }, function (error) {
+        QRCode.toCanvas(canvas, qrData, { width: 150, margin: 1 }, function (error) {
           if (error) console.error(error);
         });
 
-        // ✅ Download QR on click
-        document.getElementById("downloadQR").addEventListener("click", function (e) {
+        // ✅ Enable QR download
+        document.getElementById("downloadQR").addEventListener("click", (e) => {
           e.preventDefault();
           const link = document.createElement("a");
           link.download = `${s["id no"] || "qr"}.png`;
-          link.href = document.getElementById("qrCanvas").toDataURL("image/png");
+          link.href = canvas.toDataURL("image/png");
           link.click();
         });
       },
-      error: function (err) {
-        console.error(err);
-        document.getElementById("student-detail").textContent = "❌ Error loading sheet.";
-      }
     });
   </script>
 </body>
