@@ -1,4 +1,4 @@
-// ✅ Student ID Card Loader Script
+// ✅ Student ID Card Loader Script (Final)
 const SHEET_CSV_URL =
   "https://docs.google.com/spreadsheets/d/1mFO4VfkTJRbWyToBP2BSobb44HVDVfPrL04R7UdflYg/export?format=csv&gid=0";
 
@@ -29,20 +29,23 @@ document.addEventListener("DOMContentLoaded", () => {
         .map(
           (s) => `
           <div class="id-card">
-            <div class="college-name">
+            <div class="college-name" style="display:flex;justify-content:center;align-items:center;gap:6px;">
+              <span>${s["college name"] || ""}</span>
               ${s["logo"]
-                ? `<img src="${s["logo"]}" style="width:28px;height:28px;vertical-align:middle;margin-right:6px;">`
+                ? `<img src="${s["logo"]}" alt="logo" style="width:28px;height:28px;object-fit:contain;">`
                 : ""}
-              ${s["college name"] || ""}
             </div>
+
             <div class="photo-box">
               ${s["photo"] ? `<img src="${s["photo"]}" alt="photo">` : ""}
             </div>
+
             <div class="info">
               <p><strong>ID:</strong> ${s["id no"]}</p>
               <p><strong>Name:</strong> ${s["name"]}</p>
               <p><strong>Branch:</strong> ${s["branch"]}</p>
             </div>
+
             <div class="qr">
               <img src="https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(
                 window.location.origin +
@@ -51,6 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   s["id no"]
               )}&size=100x100" alt="QR" />
             </div>
+
             <a class="view-btn" href="student.html?id=${encodeURIComponent(
               s["id no"]
             )}">View Full ID</a>
