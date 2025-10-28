@@ -16,3 +16,11 @@ footer{font-size:.9rem}
 .view-btn,.download-btn{background:#0a58ca;color:#fff;padding:8px 15px;border-radius:8px;text-decoration:none;margin-top:5px;display:inline-block;transition:background .3s;z-index:1}
 .view-btn:hover,.download-btn:hover{background:#063b8b}
 @media(max-width:768px){.id-card{width:90%}.id-card.single{width:90%;margin-top:20px}}
+.id-card.has-watermark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--bg-logo) center/80% no-repeat;
+  opacity: 0.08;
+  z-index: 0;
+}
