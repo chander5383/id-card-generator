@@ -29,8 +29,12 @@ document.addEventListener("DOMContentLoaded", () => {
         .map(
           (s) => `
           <div class="id-card">
-            ${s["logo"] ? `<img src="${s["logo"]}" class="logo watermark">` : ""}
-            <div class="college-name">${s["college name"] || ""}</div>
+            <div class="college-name">
+              ${s["logo"]
+                ? `<img src="${s["logo"]}" style="width:28px;height:28px;vertical-align:middle;margin-right:6px;">`
+                : ""}
+              ${s["college name"] || ""}
+            </div>
             <div class="photo-box">
               ${s["photo"] ? `<img src="${s["photo"]}" alt="photo">` : ""}
             </div>
