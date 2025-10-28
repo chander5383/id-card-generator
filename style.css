@@ -64,9 +64,11 @@ footer {
 }
 
 .college-header img {
-  width: 45px;
-  height: 45px;
+  width: 140px;       /* 👈 Fixed width */
+  height: 140px;      /* 👈 Fixed height */
   object-fit: contain;
+  margin: 0 auto;     /* Center align if needed */
+  display: block;
 }
 
 .photo-box img {
