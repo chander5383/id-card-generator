@@ -84,16 +84,8 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 6px;
       z-index: 1;
       position: relative;
-    }
-
-    .qr-section img.logo-left {
-      width: 55px;
-      height: 55px;
-      object-fit: contain;
-      border-radius: 6px;
     }
 
     .info {
@@ -179,7 +171,6 @@
             </div>
 
             <div class="qr-section">
-              ${s["logo"] ? `<img src="${s["logo"]}" class="logo-left" alt="logo">` : ""}
               <canvas id="qrCanvas"></canvas>
             </div>
 
