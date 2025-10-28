@@ -44,12 +44,12 @@
 
     .college-header {
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
-      gap: 8px;
       z-index: 1;
       position: relative;
       margin-bottom: 4px;
+      padding: 0 10px;
     }
 
     .college-header img {
@@ -62,6 +62,7 @@
       font-weight: 700;
       color: #004080;
       font-size: 1.05rem;
+      text-align: left;
     }
 
     .photo-box {
@@ -69,6 +70,7 @@
       justify-content: center;
       z-index: 1;
       margin-top: 2px;
+      margin-bottom: 2px;
     }
 
     .photo-box img {
@@ -80,7 +82,7 @@
     }
 
     .qr-section {
-      margin-top: 8px;
+      margin-top: 4px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -162,13 +164,15 @@
         container.innerHTML = `
           <div id="idCard" class="id-card" style="--watermark-url: url('${s["logo"] || ""}')">
             <div class="college-header">
-              ${s["logo"] ? `<img src="${s["logo"]}" alt="logo">` : ""}
               <div class="college-name">${s["college name"] || ""}</div>
+              ${s["logo"] ? `<img src="${s["logo"]}" alt="logo">` : ""}
             </div>
 
             <div class="photo-box">
               ${s["photo"] ? `<img src="${s["photo"]}" alt="photo">` : ""}
             </div>
+
+            <hr style="width:80%;margin:6px auto;border:0.5px solid #ddd;">
 
             <div class="qr-section">
               <canvas id="qrCanvas"></canvas>
