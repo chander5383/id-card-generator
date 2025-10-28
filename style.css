@@ -1,70 +1,77 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
   font-family: "Poppins", sans-serif;
-  background: #eef3f9;
-  color: #222;
+  background: #e9f0fa;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-header, footer {
-  text-align: center;
+header {
   background: #0a58ca;
   color: #fff;
-  padding: 10px 0;
+  padding: 12px;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 600;
 }
 
 footer {
-  font-size: 0.9rem;
+  background: #0a58ca;
+  color: #fff;
+  text-align: center;
+  padding: 8px 0;
+  font-size: 0.85rem;
+  margin-top: auto;
 }
 
 .card-container {
   display: flex;
   justify-content: center;
-  align-items: stretch;
   flex-wrap: wrap;
-  gap: 30px;
-  padding: 40px 20px;
+  gap: 20px;
+  padding: 20px;
 }
 
 .id-card {
+  width: 280px;
   background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  padding: 12px;
   text-align: center;
-  width: 300px;
-  padding: 20px;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   transition: transform 0.2s ease;
 }
 
 .id-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-4px);
+}
+
+.college-header {
+  display: flex;
+  justify-content: space-between; /* name left, logo right */
+  align-items: center;
+  padding: 0 8px;
+  margin-bottom: 6px;
 }
 
 .college-name {
   font-weight: 700;
   color: #004080;
-  margin-bottom: 8px;
-  font-size: 1.05rem;
+  font-size: 1rem;
+  text-align: left;
+  flex: 1;
 }
 
-.photo-box {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 6px;
+.college-header img {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
 }
 
 .photo-box img {
-  width: 110px;
-  height: 110px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #ccc;
@@ -72,40 +79,36 @@ footer {
 
 .info {
   text-align: left;
-  margin-top: 10px;
-  padding: 0 10%;
-  z-index: 1;
+  padding: 0 12px;
+  font-size: 0.85rem;
+  margin-top: 8px;
 }
 
 .info p {
-  margin: 5px 0;
+  margin: 3px 0;
+}
+
+.qr-box {
+  margin-top: 6px;
+}
+
+.qr-box img {
+  width: 100px;
+  height: 100px;
+}
+
+.btn {
+  display: inline-block;
+  background: #0a58ca;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  margin-top: 10px;
+  transition: background 0.3s;
   font-size: 0.9rem;
 }
 
-.qr {
-  display: flex;
-  justify-content: center;
-  margin: 10px 0;
-  z-index: 1;
-}
-
-.view-btn, .download-btn {
-  background: #0a58ca;
-  color: #fff;
-  padding: 8px 15px;
-  border-radius: 8px;
-  text-decoration: none;
-  margin-top: 5px;
-  display: inline-block;
-  transition: background 0.3s;
-}
-
-.view-btn:hover, .download-btn:hover {
+.btn:hover {
   background: #063b8b;
-}
-
-@media (max-width: 768px) {
-  .id-card {
-    width: 90%;
-  }
 }
