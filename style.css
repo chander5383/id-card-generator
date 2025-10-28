@@ -64,8 +64,8 @@ footer {
 }
 
 .college-header img {
-  width: 140px;       /* 👈 Fixed width */
-  height: 140px;      /* 👈 Fixed height */
+  width: 65px;       /* 👈 Fixed width */
+  height: 65px;      /* 👈 Fixed height */
   object-fit: contain;
   margin: 0 auto;     /* Center align if needed */
   display: block;
