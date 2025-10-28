@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Full ID</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+</head>
+<body>
+  <main id="student-detail" class="student-detail">Loading student details...</main>
+
+  <script>
+    const SHEET_CSV_URL =
+      "https://docs.google.com/spreadsheets/d/1mFO4VfkTJRbWyToBP2BSobb44HVDVfPrL04R7UdflYg/export?format=csv&gid=0";
+    const id = new URLSearchParams(window.location.search).get("id");
+
+    Papa.parse(SHEET_CSV_URL, {
+      download: true,
+      header: true,
+      skipEmptyLines: true,
+      complete: (results) => {
+        const data = results.data.map(r => {
+          const clean = {};
+          Object.keys(r).forEach(k => clean[k.trim().toLowerCase()] = (r[k] || "").trim());
+          return clean;
+        });
+
+        const s = data.find(st =>
+          (st["id no"] && st["id no"].trim() === id.trim()) ||
+          (st["id"] && st["id"].trim() === id.trim()) ||
+          (st["roll"] && st["roll"].trim() === id.trim())
+        );
+
+        const container = document.getElementById("student-detail");
+        if (!s) {
+          container.innerHTML = `<p style="text-align:center;color:red;font-weight:bold;">❌ Student not found.</p>`;
+          return;
+        }
+
+        const qrData = `
+ID: ${s["id no"]}
+Name: ${s["name"]}
+Branch: ${s["branch"]}
+College: ${s["college name"]}
+Phone: ${s["phone"]}
+        `;
+
+        container.innerHTML = `
+          <div class="id-card single has-watermark">
+            ${s["logo"] ? `<img src="${s["logo"]}" class="logo watermark">` : ""}
+            <div class="college-name">${s["college name"] || ""}</div>
+            <div class="qr"><canvas id="qrCanvas"></canvas></div>
+            <div class="photo-box">
+              ${s["photo"] ? `<img src="${s["photo"]}" alt="photo">` : ""}
+            </div>
+            <div class="info">
+              <p><strong>ID No:</strong> ${s["id no"]}</p>
+              <p><strong>Name:</strong> ${s["name"]}</p>
+              <p><strong>Father:</strong> ${s["father"]}</p>
+              <p><strong>Mother:</strong> ${s["mother"]}</p>
+              <p><strong>Roll:</strong> ${s["roll"]}</p>
+              <p><strong>Course:</strong> ${s["course"]}</p>
+              <p><strong>Branch:</strong> ${s["branch"]}</p>
+              <p><strong>DOB:</strong> ${s["dob"]}</p>
+              <p><strong>Session:</strong> ${s["session"]}</p>
+              <p><strong>Address:</strong> ${s["address"]}</p>
+              <p><strong>Phone:</strong> ${s["phone"]}</p>
+              <p><strong>Valid Upto:</strong> ${s["valid upto"]}</p>
+            </div>
+            <a id="downloadQR" class="download-btn" href="#">Download QR</a>
+          </div>
+        `;
+
+        const canvas = document.getElementById("qrCanvas");
+        QRCode.toCanvas(canvas, qrData, { width: 150, margin: 1 }, function (error) {
+          if (error) console.error(error);
+        });
+
+        document.getElementById("downloadQR").addEventListener("click", (e) => {
+          e.preventDefault();
+          const link = document.createElement("a");
+          link.download = `${s["id no"] || "qr"}.png`;
+          link.href = canvas.toDataURL("image/png");
+          link.click();
+        });
+      },
+    });
+  </script>
+</body>
+</html>
