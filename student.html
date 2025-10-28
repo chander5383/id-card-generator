@@ -7,13 +7,141 @@
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+  <style>
+    body {
+      background: #eef3f9;
+      font-family: "Poppins", sans-serif;
+      color: #222;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .id-card {
+      position: relative;
+      width: 380px;
+      max-width: 95%;
+      padding: 16px 18px;
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      text-align: center;
+    }
+
+    /* Watermark logo */
+    .id-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--watermark-url) center/70% no-repeat;
+      opacity: 0.08;
+      z-index: 0;
+    }
+
+    .college-name {
+      font-weight: 700;
+      color: #004080;
+      font-size: 1.05rem;
+      margin-bottom: 2px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+
+    .qr-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .qr-section img.logo-left {
+      width: 55px;
+      height: 55px;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    .photo-box img {
+      width: 95px;
+      height: 95px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #ccc;
+    }
+
+    .info {
+      text-align: left;
+      margin-top: 6px;
+      padding: 0 8%;
+      font-size: 0.85rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .info p {
+      margin: 3px 0;
+    }
+
+    .btn-box {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+      z-index: 1;
+      position: relative;
+    }
+
+    .btn-box a {
+      background: #0a58ca;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: background 0.3s;
+    }
+
+    .btn-box a:hover {
+      background: #063b8b;
+    }
+
+    @media (max-width: 600px) {
+      .top-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+      .photo-box img {
+        width: 90px;
+        height: 90px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <main id="student-detail" class="student-detail">Loading student details...</main>
+  <main id="student-detail">Loading student details...</main>
 
   <script>
     const SHEET_CSV_URL =
       "https://docs.google.com/spreadsheets/d/1mFO4VfkTJRbWyToBP2BSobb44HVDVfPrL04R7UdflYg/export?format=csv&gid=0";
+
     const id = new URLSearchParams(window.location.search).get("id");
 
     Papa.parse(SHEET_CSV_URL, {
@@ -39,22 +167,21 @@
           return;
         }
 
-        const qrData = `
-ID: ${s["id no"]}
-Name: ${s["name"]}
-Branch: ${s["branch"]}
-College: ${s["college name"]}
-Phone: ${s["phone"]}
-        `;
-
         container.innerHTML = `
-          <div class="id-card single has-watermark">
-            ${s["logo"] ? `<img src="${s["logo"]}" class="logo watermark">` : ""}
+          <div id="idCard" class="id-card" style="--watermark-url: url('${s["logo"] || ""}')">
             <div class="college-name">${s["college name"] || ""}</div>
-            <div class="qr"><canvas id="qrCanvas"></canvas></div>
-            <div class="photo-box">
-              ${s["photo"] ? `<img src="${s["photo"]}" alt="photo">` : ""}
+
+            <div class="top-row">
+              <div class="qr-section">
+                ${s["logo"] ? `<img src="${s["logo"]}" class="logo-left" alt="logo">` : ""}
+                <canvas id="qrCanvas"></canvas>
+              </div>
+
+              <div class="photo-box">
+                ${s["photo"] ? `<img src="${s["photo"]}" alt="photo">` : ""}
+              </div>
             </div>
+
             <div class="info">
               <p><strong>ID No:</strong> ${s["id no"]}</p>
               <p><strong>Name:</strong> ${s["name"]}</p>
@@ -69,12 +196,23 @@ Phone: ${s["phone"]}
               <p><strong>Phone:</strong> ${s["phone"]}</p>
               <p><strong>Valid Upto:</strong> ${s["valid upto"]}</p>
             </div>
-            <a id="downloadQR" class="download-btn" href="#">Download QR</a>
+
+            <div class="btn-box">
+              <a id="downloadQR" href="#">Download QR</a>
+              <a id="downloadCard" href="#">Download Full ID</a>
+            </div>
           </div>
         `;
 
-        const canvas = document.getElementById("qrCanvas");
-        QRCode.toCanvas(canvas, qrData, { width: 150, margin: 1 }, function (error) {
+        const qrCanvas = document.getElementById("qrCanvas");
+        const qrData = `
+ID: ${s["id no"]}
+Name: ${s["name"]}
+Branch: ${s["branch"]}
+College: ${s["college name"]}
+Phone: ${s["phone"]}
+        `;
+        QRCode.toCanvas(qrCanvas, qrData, { width: 120, margin: 1 }, (error) => {
           if (error) console.error(error);
         });
 
@@ -82,8 +220,19 @@ Phone: ${s["phone"]}
           e.preventDefault();
           const link = document.createElement("a");
           link.download = `${s["id no"] || "qr"}.png`;
-          link.href = canvas.toDataURL("image/png");
+          link.href = qrCanvas.toDataURL("image/png");
           link.click();
+        });
+
+        document.getElementById("downloadCard").addEventListener("click", (e) => {
+          e.preventDefault();
+          const card = document.getElementById("idCard");
+          html2canvas(card, { scale: 3, useCORS: true, backgroundColor: "#fff" }).then((canvas) => {
+            const link = document.createElement("a");
+            link.download = `${s["id no"] || "idcard"}.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+          });
         });
       },
     });
