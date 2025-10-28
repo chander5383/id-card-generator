@@ -25,7 +25,7 @@
       position: relative;
       width: 380px;
       max-width: 95%;
-      padding: 16px 18px;
+      padding: 14px 18px;
       border-radius: 14px;
       background: #fff;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
@@ -33,7 +33,6 @@
       text-align: center;
     }
 
-    /* Watermark logo */
     .id-card::before {
       content: "";
       position: absolute;
@@ -43,30 +42,51 @@
       z-index: 0;
     }
 
-    .college-name {
-      font-weight: 700;
-      color: #004080;
-      font-size: 1.05rem;
-      margin-bottom: 2px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      position: relative;
-      z-index: 1;
-    }
-
-    .qr-section {
+    .college-header {
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 8px;
+      z-index: 1;
+      position: relative;
+      margin-bottom: 4px;
+    }
+
+    .college-header img {
+      width: 45px;
+      height: 45px;
+      object-fit: contain;
+    }
+
+    .college-name {
+      font-weight: 700;
+      color: #004080;
+      font-size: 1.05rem;
+    }
+
+    .photo-box {
+      display: flex;
+      justify-content: center;
+      z-index: 1;
+      margin-top: 2px;
+    }
+
+    .photo-box img {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #ccc;
+    }
+
+    .qr-section {
+      margin-top: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      z-index: 1;
+      position: relative;
     }
 
     .qr-section img.logo-left {
@@ -74,14 +94,6 @@
       height: 55px;
       object-fit: contain;
       border-radius: 6px;
-    }
-
-    .photo-box img {
-      width: 95px;
-      height: 95px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #ccc;
     }
 
     .info {
@@ -102,7 +114,7 @@
       justify-content: center;
       gap: 8px;
       flex-wrap: wrap;
-      margin-top: 6px;
+      margin-top: 8px;
       z-index: 1;
       position: relative;
     }
@@ -119,18 +131,6 @@
 
     .btn-box a:hover {
       background: #063b8b;
-    }
-
-    @media (max-width: 600px) {
-      .top-row {
-        flex-direction: column;
-        align-items: center;
-        gap: 6px;
-      }
-      .photo-box img {
-        width: 90px;
-        height: 90px;
-      }
     }
   </style>
 </head>
@@ -169,17 +169,18 @@
 
         container.innerHTML = `
           <div id="idCard" class="id-card" style="--watermark-url: url('${s["logo"] || ""}')">
-            <div class="college-name">${s["college name"] || ""}</div>
+            <div class="college-header">
+              ${s["logo"] ? `<img src="${s["logo"]}" alt="logo">` : ""}
+              <div class="college-name">${s["college name"] || ""}</div>
+            </div>
 
-            <div class="top-row">
-              <div class="qr-section">
-                ${s["logo"] ? `<img src="${s["logo"]}" class="logo-left" alt="logo">` : ""}
-                <canvas id="qrCanvas"></canvas>
-              </div>
+            <div class="photo-box">
+              ${s["photo"] ? `<img src="${s["photo"]}" alt="photo">` : ""}
+            </div>
 
-              <div class="photo-box">
-                ${s["photo"] ? `<img src="${s["photo"]}" alt="photo">` : ""}
-              </div>
+            <div class="qr-section">
+              ${s["logo"] ? `<img src="${s["logo"]}" class="logo-left" alt="logo">` : ""}
+              <canvas id="qrCanvas"></canvas>
             </div>
 
             <div class="info">
