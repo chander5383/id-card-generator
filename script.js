@@ -1,4 +1,4 @@
-// ✅ Student ID Card Loader Script (Final with 45x45 logo on right)
+// ✅ Student ID Card Loader Script (Final with top-right logo)
 const SHEET_CSV_URL =
   "https://docs.google.com/spreadsheets/d/1mFO4VfkTJRbWyToBP2BSobb44HVDVfPrL04R7UdflYg/export?format=csv&gid=0";
 
@@ -28,14 +28,18 @@ document.addEventListener("DOMContentLoaded", () => {
       container.innerHTML = data
         .map(
           (s) => `
-          <div class="id-card">
-            <div class="college-name" style="display:flex;justify-content:center;align-items:center;gap:6px;">
-              <span>${s["college name"] || ""}</span>
-              ${
-                s["logo"]
-                  ? `<img src="${s["logo"]}" alt="logo" style="width:45px;height:45px;object-fit:contain;">`
-                  : ""
-              }
+          <div class="id-card" style="position: relative;">
+
+            ${
+              s["logo"]
+                ? `<img src="${s["logo"]}" alt="logo" 
+                     style="position:absolute; top:12px; right:12px; width:45px; height:45px; object-fit:contain;">`
+                : ""
+            }
+
+            <div class="college-name" 
+                 style="text-align:center; font-weight:700; color:#004080; margin-bottom:8px; font-size:1.05rem;">
+              ${s["college name"] || ""}
             </div>
 
             <div class="photo-box">
