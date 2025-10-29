@@ -3,6 +3,7 @@ const SHEET_CSV_URL =
 
 let allData = [];
 const container = document.getElementById("cards");
+const loader = document.getElementById("loader");
 
 // ✅ Load Data
 Papa.parse(SHEET_CSV_URL, {
@@ -15,11 +16,16 @@ Papa.parse(SHEET_CSV_URL, {
       Object.keys(r).forEach(k => clean[k.trim().toLowerCase()] = (r[k] || "").trim());
       return clean;
     });
+
+    // Hide loader, show cards
+    loader.style.display = "none";
+    container.style.display = "grid";
+
     renderCards(allData);
   },
 });
 
-// ✅ Render student cards
+// ✅ Render Cards
 function renderCards(data) {
   container.innerHTML = "";
   if (data.length === 0) {
