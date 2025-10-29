@@ -51,6 +51,7 @@
       background: #063b8b;
     }
 
+    /* ID CARD */
     .id-card {
       width: 95%;
       max-width: 380px;
@@ -61,16 +62,20 @@
       transition: all 0.3s;
       transform: scale(1);
       position: relative;
-      background-size: cover;
+      background-color: #fff;
+      background-size: 160px;
       background-position: center;
       background-repeat: no-repeat;
+      background-blend-mode: lighten;
+      opacity: 0.98;
     }
 
     .overlay {
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(255, 255, 255, 0.9);
       border-radius: 16px;
       padding: 16px;
       position: relative;
+      backdrop-filter: blur(1px);
     }
 
     .college-header {
@@ -159,7 +164,7 @@
       background: #063b8b;
     }
 
-    /* Mobile Responsiveness */
+    /* Mobile Responsive */
     @media (max-width: 500px) {
       .id-card {
         max-width: 92%;
