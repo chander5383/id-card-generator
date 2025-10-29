@@ -1,295 +1,193 @@
-<!DOCTYPE html>
-
-<html lang="en">
+<!doctype html>
+<html lang="hi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Student Full ID</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ID Card — Robust Download</title>
 
-  <!-- Libraries -->
+<!-- libs -->
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-  <!-- Font -->
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
-  <style>
-    body {
-      background: #eef3f9;
-      font-family: "Poppins", sans-serif;
-      color: #222;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .id-card {
-      position: relative;
-      width: 380px;
-      max-width: 95%;
-      padding: 14px 18px;
-      border-radius: 14px;
-      background: #fff;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      text-align: center;
-    }
-
-    .id-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: var(--watermark-url) center/70% no-repeat;
-      opacity: 0.08;
-      z-index: 0;
-    }
-
-    .college-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 4px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .college-name {
-      font-weight: 700;
-      color: #004080;
-      font-size: 1.05rem;
-      text-align: left;
-      flex: 1;
-    }
-
-    .college-header img {
-      width: 65px;
-      height: 65px;
-      object-fit: contain;
-    }
-
-    .id-title {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #0a58ca;
-      margin-bottom: 6px;
-      background: #eaf2ff;
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 6px;
-    }
-
-    .photo-box {
-      display: flex;
-      justify-content: center;
-      z-index: 1;
-      margin-top: 2px;
-      margin-bottom: 2px;
-    }
-
-    .photo-box img {
-      width: 110px;
-      height: 110px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #ccc;
-    }
-
-    .info {
-      text-align: left;
-      margin-top: 4px;
-      padding: 0 8%;
-      font-size: 0.85rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    .info p {
-      margin: 2px 0;
-    }
-
-    .institute-info {
-      text-align: left;
-      font-size: 0.85rem;
-      margin-top: 2px;
-      padding: 0 8%;
-      color: #222;
-      z-index: 1;
-      position: relative;
-    }
-
-    .institute-info p {
-      margin: 2px 0;
-    }
-
-    .btn-box {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-      z-index: 1;
-      position: relative;
-    }
-
-    .btn-box a {
-      background: #0a58ca;
-      color: #fff;
-      padding: 8px 16px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 0.9rem;
-      transition: background 0.3s;
-      cursor: pointer;
-    }
-
-    .btn-box a:hover {
-      background: #063b8b;
-    }
-  </style>
-
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;background:#f3f7fb;padding:20px;}
+  .controls{margin-bottom:12px;}
+  input{padding:8px;width:220px}
+  button{padding:8px 12px;margin-left:6px;cursor:pointer}
+  #idCard{width:360px;background:#fff;padding:14px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.08)}
+  .photo{width:110px;height:110px;border-radius:50%;object-fit:cover;border:2px solid #ddd;display:block;margin:8px auto}
+  .info p{margin:6px 0;font-size:14px}
+  #log{margin-top:12px;font-family:monospace;background:#111;color:#fff;padding:8px;border-radius:6px;max-height:160px;overflow:auto}
+</style>
 </head>
-
 <body>
-  <main id="student-detail">Loading student details...</main>
 
-  <script>
-    const SHEET_CSV_URL =
-      "https://docs.google.com/spreadsheets/d/1mFO4VfkTJRbWyToBP2BSobb44HVDVfPrL04R7UdflYg/export?format=csv&gid=0";
+<h3>Test ID Card — Robust Download</h3>
+<div class="controls">
+  <input id="inpId" placeholder="Enter ID or roll" />
+  <button id="btnGen">Generate</button>
+</div>
 
-    const id = new URLSearchParams(window.location.search).get("id");
+<div id="cardWrap"></div>
 
-    Papa.parse(SHEET_CSV_URL, {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      complete: (results) => {
-        const data = results.data.map(r => {
-          const clean = {};
-          Object.keys(r).forEach(k => clean[k.trim().toLowerCase()] = (r[k] || "").trim());
-          return clean;
-        });
+<div style="margin-top:12px">
+  <button id="btnDownloadPNG" disabled>Download PNG</button>
+  <button id="btnDownloadPDF" disabled>Download PDF</button>
+  <button id="btnDownloadQR" disabled>Download QR</button>
+</div>
 
-        const s = data.find(st =>
-          (st["id no"] && st["id no"].trim() === id.trim()) ||
-          (st["id"] && st["id"].trim() === id.trim()) ||
-          (st["roll"] && st["roll"].trim() === id.trim())
-        );
+<pre id="log">Console log will appear here...</pre>
 
-        const container = document.getElementById("student-detail");
-        if (!s) {
-          container.innerHTML = `<p style="text-align:center;color:red;font-weight:bold;">❌ Student not found.</p>`;
-          return;
-        }
+<script>
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1mFO4VfkTJRbWyToBP2BSobb44HVDVfPrL04R7UdflYg/export?format=csv&gid=0";
 
-        container.innerHTML = `
-          <div id="idCard" class="id-card" style="--watermark-url: url('${s["logo"] || ""}')">
-            <div class="college-header">
-              <div class="college-name">${s["college name"] || ""}</div>
-              ${s["logo"] ? `<img src="${s["logo"]}" crossorigin="anonymous" alt="logo">` : ""}
-            </div>
+const logEl = document.getElementById('log');
+function log(...args){ console.log(...args); logEl.textContent += '\\n' + args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' '); logEl.scrollTop = logEl.scrollHeight; }
 
-            <div class="id-title">🎓 Student ID Card</div>
+let currentStudent = null;
+let qrCanvas = null;
 
-            <div class="photo-box">
-              ${s["photo"] ? `<img src="${s["photo"]}" crossorigin="anonymous" alt="photo">` : ""}
-            </div>
+document.getElementById('btnGen').addEventListener('click', async () => {
+  log('Generating card — fetching sheet...');
+  const id = document.getElementById('inpId').value.trim();
+  if(!id){ alert('Enter ID / roll'); return; }
 
-            <hr style="width:80%;margin:2px auto;border:0.5px solid #ddd;">
-
-            <div class="info">
-              <p><strong>ID No:</strong> ${s["id no"]}</p>
-              <p><strong>Name:</strong> ${s["name"]}</p>
-              <p><strong>Father:</strong> ${s["father"]}</p>
-              <p><strong>Mother:</strong> ${s["mother"]}</p>
-              <p><strong>Roll:</strong> ${s["roll"]}</p>
-              <p><strong>Course:</strong> ${s["course"]}</p>
-              <p><strong>Branch:</strong> ${s["branch"]}</p>
-              <p><strong>DOB:</strong> ${s["dob"]}</p>
-              <p><strong>Session:</strong> ${s["session"]}</p>
-              <p><strong>Address:</strong> ${s["address"]}</p>
-              <p><strong>Phone:</strong> ${s["phone"]}</p>
-              <p><strong>Valid Upto:</strong> ${s["valid upto"]}</p>
-            </div>
-
-            <div class="institute-info">
-              <hr style="width:80%;margin:2px auto;border:0.5px solid #ddd;">
-              <p><strong>Institute Address:</strong> ${s["institute address"] || ""}</p>
-              <p><strong>Institute Phone:</strong> ${s["institute phone"] || ""}</p>
-              <p><strong>Institute Email:</strong> ${s["institute email"] || ""}</p>
-            </div>
-
-            <div class="btn-box">
-              <a id="downloadQR">Download QR</a>
-              <a id="downloadCard">Download PNG</a>
-              <a id="downloadPDF">Download PDF</a>
-            </div>
-          </div>
-        `;
-
-        // Generate QR
-        const qrCanvas = document.createElement("canvas");
-        const qrData = `
-ID: ${s["id no"]}
-Name: ${s["name"]}
-Branch: ${s["branch"]}
-College: ${s["college name"]}
-Phone: ${s["phone"]}
-        `;
-        QRCode.toCanvas(qrCanvas, qrData, { width: 160, margin: 1 }, (error) => {
-          if (error) console.error(error);
-        });
-
-        // ✅ QR Download
-        document.getElementById("downloadQR").addEventListener("click", async () => {
-          const qrImg = qrCanvas.toDataURL("image/png");
-          const link = document.createElement("a");
-          link.href = qrImg;
-          link.download = `${s["id no"] || "qr"}.png`;
-          document.body.appendChild(link);
-          link.click();
-          await new Promise(r => setTimeout(r, 200));
-          document.body.removeChild(link);
-        });
-
-        // ✅ Full ID (PNG)
-        document.getElementById("downloadCard").addEventListener("click", async () => {
-          const card = document.getElementById("idCard");
-          await new Promise(r => setTimeout(r, 1000)); // wait for image load
-          const canvas = await html2canvas(card, { scale: 3, useCORS: true, backgroundColor: "#fff" });
-          const imgData = canvas.toDataURL("image/png");
-          const link = document.createElement("a");
-          link.href = imgData;
-          link.download = `${s["id no"] || "idcard"}.png`;
-          document.body.appendChild(link);
-          link.click();
-          await new Promise(r => setTimeout(r, 200));
-          document.body.removeChild(link);
-        });
-
-        // ✅ Full ID (PDF)
-        document.getElementById("downloadPDF").addEventListener("click", async () => {
-          const card = document.getElementById("idCard");
-          await new Promise(r => setTimeout(r, 1000)); // wait for image load
-          const canvas = await html2canvas(card, { scale: 3, useCORS: true, backgroundColor: "#fff" });
-          const imgData = canvas.toDataURL("image/png");
-          const pdf = new jspdf.jsPDF("p", "mm", "a4");
-          const width = pdf.internal.pageSize.getWidth();
-          const height = (canvas.height * width) / canvas.width;
-          pdf.addImage(imgData, "PNG", 10, 10, width - 20, height);
-          pdf.save(`${s["id no"] || "idcard"}.pdf`);
-        });
-      },
+  try {
+    const results = await new Promise((res,rej) => Papa.parse(SHEET_CSV_URL, { download:true, header:true, skipEmptyLines:true, complete:res, error:rej }));
+    const data = results.data.map(r=>{
+      const out = {};
+      Object.keys(r).forEach(k => { out[k.trim().toLowerCase()] = (r[k]||'').trim(); });
+      return out;
     });
-  </script>
+    const s = data.find(row =>
+      (row['id no'] && row['id no'].trim()===id) ||
+      (row['id'] && row['id'].trim()===id) ||
+      (row['roll'] && row['roll'].trim()===id)
+    );
+    if(!s){ document.getElementById('cardWrap').innerHTML = '<p style="color:red">Student not found</p>'; log('Student not found for', id); return; }
+    currentStudent = s;
+    renderCard(s);
+    log('Card rendered for', s['name'] || s['id no']);
+  } catch(err){ log('Error parsing sheet:', err); alert('Error fetching sheet — see console'); }
+});
 
+function renderCard(s){
+  // ensure image URLs are raw/github or drive-uc format; we won't change them here but log
+  log('photo url:', s['photo'] || 'none', 'logo url:', s['logo'] || 'none');
+
+  document.getElementById('cardWrap').innerHTML = `
+    <div id="idCard" style="--watermark:url('${(s['logo']||'')}')">
+      <div style="text-align:center;font-weight:700;color:#003366">${s['college name']||'College'}</div>
+      <img id="studPhoto" class="photo" src="${s['photo']||''}" crossorigin="anonymous" onerror="this.dataset.err=1;this.src='https://via.placeholder.com/110'">
+      <div class="info">
+        <p><strong>Name:</strong> ${s['name']||''}</p>
+        <p><strong>ID No:</strong> ${s['id no']||''} &nbsp; <strong>Roll:</strong> ${s['roll']||''}</p>
+        <p><strong>Branch:</strong> ${s['branch']||''}</p>
+      </div>
+      <div style="text-align:center;margin-top:8px"><canvas id="qrCanvas" width="140" height="140"></canvas></div>
+    </div>
+  `;
+  // generate QR
+  qrCanvas = document.getElementById('qrCanvas');
+  try {
+    QRCode.toCanvas(qrCanvas, `ID:${s['id no']||''}\nName:${s['name']||''}`, {width:140, margin:1});
+  } catch(e){ log('QR error', e); }
+  // enable buttons after ensuring images loaded
+  waitForImages(document.getElementById('idCard')).then(ok=>{
+    log('All images loaded (ok?)', ok);
+    document.getElementById('btnDownloadPNG').disabled = false;
+    document.getElementById('btnDownloadPDF').disabled = false;
+    document.getElementById('btnDownloadQR').disabled = false;
+  }).catch(err=>{
+    log('Image load error:', err);
+    document.getElementById('btnDownloadPNG').disabled = false; // allow to try anyway
+    document.getElementById('btnDownloadPDF').disabled = false;
+    document.getElementById('btnDownloadQR').disabled = false;
+  });
+}
+
+// wait until images in container are loaded (or error)
+function waitForImages(container, timeout=8000){
+  const imgs = Array.from(container.querySelectorAll('img'));
+  if(imgs.length===0) return Promise.resolve(true);
+  return Promise.race([
+    Promise.all(imgs.map(img=>{
+      if(img.complete) return Promise.resolve(true);
+      return new Promise(res => {
+        img.onload = () => res(true);
+        img.onerror = () => { log('Image failed to load:', img.src); res(false); };
+      });
+    })),
+    new Promise((_,rej)=>setTimeout(()=>rej('timeout waiting images'), timeout))
+  ]);
+}
+
+// Utility: download a dataURL by converting to blob (more reliable for large files)
+async function downloadDataUrl(name, dataUrl){
+  try{
+    const res = await fetch(dataUrl);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url), 15000);
+    log('Download triggered:', name);
+  } catch(e){ log('downloadDataUrl error:', e); alert('Download failed — check console for details'); }
+}
+
+// PNG download
+document.getElementById('btnDownloadPNG').addEventListener('click', async ()=>{
+  if(!currentStudent){ alert('Generate card first'); return; }
+  const card = document.getElementById('idCard');
+  try{
+    log('Capturing canvas (PNG)...');
+    await waitForImages(card).catch(e=>log('waitForImages err (continuing):', e));
+    const canvas = await html2canvas(card, {scale:3, useCORS:true, backgroundColor:'#fff'});
+    const dataUrl = canvas.toDataURL('image/png');
+    await downloadDataUrl(`${(currentStudent['id no']||'idcard')}.png`, dataUrl);
+  }catch(err){ log('PNG capture error:', err); alert('PNG capture failed — see console'); }
+});
+
+// PDF download
+document.getElementById('btnDownloadPDF').addEventListener('click', async ()=>{
+  if(!currentStudent){ alert('Generate card first'); return; }
+  const card = document.getElementById('idCard');
+  try{
+    log('Capturing canvas (for PDF)...');
+    await waitForImages(card).catch(e=>log('waitForImages err (continuing):', e));
+    const canvas = await html2canvas(card, {scale:3, useCORS:true, backgroundColor:'#fff'});
+    const imgData = canvas.toDataURL('image/png');
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'px', format: [canvas.width, canvas.height] });
+    pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+    // pdf.save will use blob internally; to show robustness we convert to blob and trigger download ourselves
+    const pdfBlob = pdf.output('blob');
+    const url = URL.createObjectURL(pdfBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${(currentStudent['id no']||'idcard')}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url),15000);
+    log('PDF download triggered');
+  }catch(err){ log('PDF error:', err); alert('PDF generation failed — see console'); }
+});
+
+// QR only
+document.getElementById('btnDownloadQR').addEventListener('click', async ()=>{
+  if(!qrCanvas){ alert('Generate card first'); return; }
+  try{
+    const dataUrl = qrCanvas.toDataURL('image/png');
+    await downloadDataUrl('qr.png', dataUrl);
+  }catch(err){ log('QR download err', err); }
+});
+</script>
 </body>
 </html>
