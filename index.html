@@ -7,26 +7,53 @@
 
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </head>
 
 <body>
   <header>
-    <h2>🎓 Student ID Directory</h2>
+    <div class="header-left">
+      <h2>🎓 Student ID Directory</h2>
+    </div>
+
+    <div class="header-right">
+      <label class="theme-switch">
+        <input id="themeToggle" type="checkbox" />
+        <span class="slider"></span>
+      </label>
+    </div>
   </header>
 
   <main>
-    <div class="search-container">
-      <input
-        type="text"
-        id="searchInput"
-        placeholder="🔍 Search by Name, ID, Roll No, or Branch..."
-      />
+    <div class="controls-row">
+      <div class="search-container">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="🔍 Search by Name, ID, Roll No, or Branch..."
+        />
+      </div>
+
+      <div class="filters">
+        <select id="filterBranch">
+          <option value="">All Branches</option>
+        </select>
+        <select id="filterCourse">
+          <option value="">All Courses</option>
+        </select>
+      </div>
+
+      <div class="action-buttons">
+        <button id="exportCSV" class="btn small">Export CSV</button>
+        <button id="downloadAllPDF" class="btn small">Download PDFs</button>
+      </div>
     </div>
 
-    <!-- 🔄 Loading spinner -->
+    <!-- loader -->
     <div id="loader" class="loader"></div>
 
-    <div id="cards" class="card-container" style="display:none;">Loading student records...</div>
+    <div id="cards" class="card-container" style="display:none;"></div>
   </main>
 
   <footer>
