@@ -80,8 +80,8 @@
       display: flex;
       justify-content: center;
       z-index: 1;
-      margin-top: 4px;
-      margin-bottom: 4px;
+      margin-top: 2px;
+      margin-bottom: 2px;
     }
 
     .photo-box img {
@@ -94,7 +94,7 @@
 
     .info {
       text-align: left;
-      margin-top: 8px;
+      margin-top: 4px;
       padding: 0 8%;
       font-size: 0.85rem;
       position: relative;
@@ -102,13 +102,13 @@
     }
 
     .info p {
-      margin: 3px 0;
+      margin: 2px 0;
     }
 
     .institute-info {
       text-align: left;
       font-size: 0.85rem;
-      margin-top: 4px;
+      margin-top: 2px;
       padding: 0 8%;
       color: #222;
       z-index: 1;
@@ -192,7 +192,7 @@
               ${s["photo"] ? `<img src="${s["photo"]}" alt="photo">` : ""}
             </div>
 
-            <hr style="width:80%;margin:4px auto;border:0.5px solid #ddd;">
+            <hr style="width:80%;margin:2px auto;border:0.5px solid #ddd;">
 
             <div class="info">
               <p><strong>ID No:</strong> ${s["id no"]}</p>
@@ -210,7 +210,7 @@
             </div>
 
             <div class="institute-info">
-              <hr style="width:80%;margin:4px auto;border:0.5px solid #ddd;">
+              <hr style="width:80%;margin:2px auto;border:0.5px solid #ddd;">
               <p><strong>Institute Address:</strong> ${s["institute address"] || ""}</p>
               <p><strong>Institute Phone:</strong> ${s["institute phone"] || ""}</p>
               <p><strong>Institute Email:</strong> ${s["institute email"] || ""}</p>
@@ -236,29 +236,30 @@ Phone: ${s["phone"]}
           if (error) console.error(error);
         });
 
-        // ✅ QR download button (auto-save)
-        document.getElementById("downloadQR").addEventListener("click", () => {
+        // ✅ QR Download
+        document.getElementById("downloadQR").addEventListener("click", async () => {
           const qrImg = qrCanvas.toDataURL("image/png");
           const link = document.createElement("a");
           link.href = qrImg;
           link.download = `${s["id no"] || "qr"}.png`;
           document.body.appendChild(link);
           link.click();
+          await new Promise(r => setTimeout(r, 200));
           document.body.removeChild(link);
         });
 
-        // ✅ Full ID download (auto-save)
-        document.getElementById("downloadCard").addEventListener("click", () => {
+        // ✅ Full ID Download
+        document.getElementById("downloadCard").addEventListener("click", async () => {
           const card = document.getElementById("idCard");
-          html2canvas(card, { scale: 3, useCORS: true, backgroundColor: "#fff" }).then((canvas) => {
-            const imgData = canvas.toDataURL("image/png");
-            const link = document.createElement("a");
-            link.href = imgData;
-            link.download = `${s["id no"] || "idcard"}.png`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-          });
+          const canvas = await html2canvas(card, { scale: 3, useCORS: true, backgroundColor: "#fff" });
+          const imgData = canvas.toDataURL("image/png");
+          const link = document.createElement("a");
+          link.href = imgData;
+          link.download = `${s["id no"] || "idcard"}.png`;
+          document.body.appendChild(link);
+          link.click();
+          await new Promise(r => setTimeout(r, 200));
+          document.body.removeChild(link);
         });
       },
     });
