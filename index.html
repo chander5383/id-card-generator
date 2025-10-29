@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Student ID Directory</title>
 
   <link rel="stylesheet" href="style.css" />
@@ -23,7 +23,10 @@
       />
     </div>
 
-    <div id="cards" class="card-container">Loading student records...</div>
+    <!-- 🔄 Loading spinner -->
+    <div id="loader" class="loader"></div>
+
+    <div id="cards" class="card-container" style="display:none;">Loading student records...</div>
   </main>
 
   <footer>
