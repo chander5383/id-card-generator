@@ -3,20 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🎓 Student ID Cards</title>
+  <title>Student ID Directory</title>
+
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
+
 <body>
   <header>
-    <h2>🎓 Student ID Cards</h2>
+    <h2>🎓 Student ID Directory</h2>
   </header>
 
   <main>
-    <div id="cards" class="card-container">Loading...</div>
+    <div class="search-container">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="🔍 Search by Name, ID, Roll No, or Branch..."
+      />
+    </div>
+
+    <div id="cards" class="card-container">Loading student records...</div>
   </main>
 
-  <footer>© 2025 ID Generator</footer>
+  <footer>
+    <p>© 2025 College ID Portal</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
