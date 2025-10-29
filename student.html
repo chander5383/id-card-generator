@@ -9,6 +9,7 @@
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
@@ -226,7 +227,8 @@
 
             <div class="btn-box">
               <a id="downloadQR">Download QR</a>
-              <a id="downloadCard">Download Full ID</a>
+              <a id="downloadCard">Download PNG</a>
+              <a id="downloadPDF">Download PDF</a>
             </div>
           </div>
         `;
@@ -255,22 +257,23 @@ Phone: ${s["phone"]}
           document.body.removeChild(a);
         });
 
-        // ✅ Full ID Download
-        document.getElementById("downloadCard").addEventListener("click", async () => {
+        // ✅ Helper function to render the card to canvas safely
+        async function captureCard() {
           const card = document.getElementById("idCard");
-
-          // Wait for images to fully load
           await Promise.all(Array.from(card.querySelectorAll("img")).map(img => {
             if (img.complete) return Promise.resolve();
             return new Promise(res => img.onload = img.onerror = res);
           }));
-
-          const canvas = await html2canvas(card, {
+          return await html2canvas(card, {
             scale: 3,
             useCORS: true,
             backgroundColor: "#fff"
           });
+        }
 
+        // ✅ Full ID PNG Download
+        document.getElementById("downloadCard").addEventListener("click", async () => {
+          const canvas = await captureCard();
           const imgData = canvas.toDataURL("image/png");
           const a = document.createElement("a");
           a.href = imgData;
@@ -278,6 +281,20 @@ Phone: ${s["phone"]}
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
+        });
+
+        // ✅ Full ID PDF Download
+        document.getElementById("downloadPDF").addEventListener("click", async () => {
+          const canvas = await captureCard();
+          const imgData = canvas.toDataURL("image/png");
+          const { jsPDF } = window.jspdf;
+          const pdf = new jsPDF({
+            orientation: "portrait",
+            unit: "px",
+            format: [canvas.width / 3, canvas.height / 3]
+          });
+          pdf.addImage(imgData, "PNG", 0, 0, canvas.width / 3, canvas.height / 3);
+          pdf.save(`${s["id no"] || "idcard"}.pdf`);
         });
       },
     });
