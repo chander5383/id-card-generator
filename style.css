@@ -7,33 +7,26 @@
 
 *{box-sizing:border-box}
 body{
-  margin:0; font-family:Poppins, Arial, sans-serif;
-  background:var(--bg); color:var(--text);
+  margin:0;
+  font-family:Poppins, Arial, sans-serif;
+  background:var(--bg);
+  color:var(--text);
   -webkit-font-smoothing:antialiased;
 }
 
 /* header */
 header{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:12px 18px; background:var(--primary); color:#fff;
-  position:sticky; top:0; z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 18px;background:var(--primary);color:#fff;
+  position:sticky;top:0;z-index:50;
 }
 .header-left h2{margin:0;font-size:1.1rem}
 .header-right{display:flex;align-items:center;gap:10px}
 
-/* theme switch */
-.theme-switch{position:relative;display:inline-block;width:46px;height:26px}
-.theme-switch input{opacity:0;width:0;height:0}
-.slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:34px;transition:.3s}
-.slider:before{position:absolute;content:"";height:20px;width:20px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.3s}
-.theme-switch input:checked + .slider{background:#063b8b}
-.theme-switch input:checked + .slider:before{transform:translateX(20px)}
-
 /* controls row */
 .controls-row{
   display:flex;flex-wrap:wrap;gap:10px;align-items:center;
-  padding:14px 12px; justify-content:space-between;
-  background:transparent;
+  padding:14px 12px;justify-content:space-between;
 }
 .search-container{flex:1;min-width:220px}
 .search-container input{
@@ -42,12 +35,10 @@ header{
 .filters{display:flex;gap:8px;align-items:center}
 .filters select{padding:8px 10px;border-radius:8px;border:1px solid #ccc}
 
-/* action buttons */
 .action-buttons{display:flex;gap:8px;align-items:center}
 .btn{background:var(--primary);color:#fff;padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
 .btn.small{padding:6px 10px;font-size:0.9rem}
 
-/* loader */
 .loader{border:5px solid #f3f3f3;border-top:5px solid var(--primary);border-radius:50%;width:48px;height:48px;animation:spin 1s linear infinite;margin:40px auto}
 @keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
 
@@ -64,9 +55,6 @@ header{
 .qr-box img{margin-top:8px;width:100px;height:100px}
 .btn{display:inline-block;text-decoration:none}
 
-/* highlight match */
-.highlight{background:yellow;padding:0 3px;border-radius:3px}
-
 /* footer */
 footer{background:var(--primary);color:#fff;text-align:center;padding:10px 0;margin-top:20px}
 
@@ -75,28 +63,24 @@ body.dark{--primary:#0a58ca;--bg:#0f1724;--card-bg:#0b1220;--text:#e6eef8}
 body.dark header{background:#07143a}
 body.dark .loader{border-top:5px solid #5aa0ff}
 
-/* responsive */
-@media (max-width:520px){
-  .controls-row{flex-direction:column;align-items:stretch}
-  .filters{justify-content:space-between}
-  .action-buttons{justify-content:flex-end}
-  .search-container input{font-size:0.95rem}
-}
-/* ====== Background Logo in Full ID Card ====== */
+/* Watermark-style background for full ID */
 .id-card {
-  position: relative;
-  overflow: hidden;
+  background-size: 160px !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-blend-mode: lighten !important;
+  opacity: 0.98;
 }
 
 .id-card .overlay {
-  position: relative;
-  background: rgba(255, 255, 255, 0.92); /* translucent white for readability */
+  background: rgba(255,255,255,0.9);
   border-radius: 16px;
   padding: 16px;
+  backdrop-filter: blur(1px);
 }
 
 @media print {
   .id-card .overlay {
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255,255,255,0.9);
   }
 }
