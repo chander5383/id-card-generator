@@ -1,86 +1,298 @@
-:root{
+:root {
   --primary: #0a58ca;
   --bg: #eef3f9;
   --card-bg: #fff;
   --text: #222;
 }
 
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Poppins, Arial, sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  -webkit-font-smoothing:antialiased;
+/* RESET */
+* {
+  box-sizing: border-box;
 }
 
-/* header */
-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:12px 18px;background:var(--primary);color:#fff;
-  position:sticky;top:0;z-index:50;
+body {
+  margin: 0;
+  font-family: "Poppins", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
 }
-.header-left h2{margin:0;font-size:1.1rem}
-.header-right{display:flex;align-items:center;gap:10px}
 
-/* controls row */
-.controls-row{
-  display:flex;flex-wrap:wrap;gap:10px;align-items:center;
-  padding:14px 12px;justify-content:space-between;
+/* HEADER */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background: var(--primary);
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
-.search-container{flex:1;min-width:220px}
-.search-container input{
-  width:100%;max-width:520px;padding:10px 14px;border-radius:8px;border:1px solid #ccc;font-size:1rem;
+
+.header-left h2 {
+  margin: 0;
+  font-size: 1.1rem;
 }
-.filters{display:flex;gap:8px;align-items:center}
-.filters select{padding:8px 10px;border-radius:8px;border:1px solid #ccc}
 
-.action-buttons{display:flex;gap:8px;align-items:center}
-.btn{background:var(--primary);color:#fff;padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
-.btn.small{padding:6px 10px;font-size:0.9rem}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-.loader{border:5px solid #f3f3f3;border-top:5px solid var(--primary);border-radius:50%;width:48px;height:48px;animation:spin 1s linear infinite;margin:40px auto}
-@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+/* SEARCH & FILTER BAR */
+.controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding: 14px 12px;
+  justify-content: space-between;
+}
 
-/* card grid */
-.card-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;padding:12px}
-.id-card{background:var(--card-bg);border-radius:12px;padding:12px;text-align:center;box-shadow:0 6px 18px rgba(0,0,0,0.08);transition:transform .15s}
-.id-card:hover{transform:translateY(-4px)}
-.college-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.college-name{font-weight:600;color:var(--primary);text-align:left;flex:1}
-.college-header img{width:48px;height:48px;object-fit:contain}
-.photo-box img{width:86px;height:86px;border-radius:50%;object-fit:cover;border:2px solid #ddd}
-.info{font-size:0.88rem;text-align:left;padding:6px 6px}
-.info p{margin:4px 0}
-.qr-box img{margin-top:8px;width:100px;height:100px}
-.btn{display:inline-block;text-decoration:none}
+.search-container {
+  flex: 1;
+  min-width: 220px;
+}
 
-/* footer */
-footer{background:var(--primary);color:#fff;text-align:center;padding:10px 0;margin-top:20px}
+.search-container input {
+  width: 100%;
+  max-width: 520px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
 
-/* dark theme */
-body.dark{--primary:#0a58ca;--bg:#0f1724;--card-bg:#0b1220;--text:#e6eef8}
-body.dark header{background:#07143a}
-body.dark .loader{border-top:5px solid #5aa0ff}
+.filters {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
 
-/* Watermark-style background for full ID */
+.filters select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn {
+  background: var(--primary);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn.small {
+  padding: 6px 10px;
+  font-size: 0.9rem;
+}
+
+/* LOADER */
+.loader {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid var(--primary);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  animation: spin 1s linear infinite;
+  margin: 40px auto;
+}
+@keyframes spin {
+  0% { transform: rotate(0); }
+  100% { transform: rotate(360deg); }
+}
+
+/* CARD GRID */
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  padding: 12px;
+}
+
 .id-card {
-  background-size: 160px !important;
-  background-position: center !important;
-  background-repeat: no-repeat !important;
-  background-blend-mode: lighten !important;
-  opacity: 0.98;
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transition: transform 0.15s;
 }
 
-.id-card .overlay {
-  background: rgba(255,255,255,0.9);
+.id-card:hover {
+  transform: translateY(-4px);
+}
+
+.college-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.college-name {
+  font-weight: 600;
+  color: var(--primary);
+  text-align: left;
+  flex: 1;
+}
+
+.college-header img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.photo-box img {
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+}
+
+.info {
+  font-size: 0.88rem;
+  text-align: left;
+  padding: 6px 6px;
+}
+
+.info p {
+  margin: 4px 0;
+}
+
+.qr-box img {
+  margin-top: 8px;
+  width: 100px;
+  height: 100px;
+}
+
+.btn {
+  display: inline-block;
+  text-decoration: none;
+}
+
+/* FOOTER */
+footer {
+  background: var(--primary);
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  margin-top: 20px;
+}
+
+/* DARK THEME */
+body.dark {
+  --primary: #0a58ca;
+  --bg: #0f1724;
+  --card-bg: #0b1220;
+  --text: #e6eef8;
+}
+
+body.dark header {
+  background: #07143a;
+}
+
+body.dark .loader {
+  border-top: 5px solid #5aa0ff;
+}
+
+/* BACK BUTTON */
+.back-btn {
+  position: fixed;
+  top: 14px;
+  left: 14px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 14px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  z-index: 10;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+.back-btn:hover {
+  background: #063b8b;
+}
+
+/* ===== FULL ID CARD (student.html) STYLING ===== */
+.id-card {
+  position: relative;
+  width: 95%;
+  max-width: 380px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  text-align: center;
+  background: #fff;
+}
+
+/* Background Logo Watermark */
+.logo-bg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.15;        /* transparency (adjust between 0.1–0.2) */
+  z-index: 0;
+}
+
+.logo-bg img {
+  width: 180px;          /* logo size */
+  height: auto;
+  object-fit: contain;
+  filter: grayscale(100%);
+}
+
+.overlay {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.92);
   border-radius: 16px;
   padding: 16px;
   backdrop-filter: blur(1px);
 }
 
+/* Buttons inside student card */
+.btn-box {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+.btn-box a {
+  background: var(--primary);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+.btn-box a:hover {
+  background: #063b8b;
+}
+
+/* PRINT MODE */
 @media print {
-  .id-card .overlay {
-    background: rgba(255,255,255,0.9);
+  .overlay {
+    background: rgba(255, 255, 255, 0.9);
+  }
+  .btn-box {
+    display: none;
   }
 }
