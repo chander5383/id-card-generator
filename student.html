@@ -52,16 +52,25 @@
     }
 
     .id-card {
-      background: #fff;
       width: 95%;
       max-width: 380px;
       border-radius: 16px;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-      padding: 16px;
       overflow: hidden;
       text-align: center;
       transition: all 0.3s;
       transform: scale(1);
+      position: relative;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .overlay {
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 16px;
+      padding: 16px;
+      position: relative;
     }
 
     .college-header {
@@ -154,7 +163,6 @@
     @media (max-width: 500px) {
       .id-card {
         max-width: 92%;
-        padding: 12px;
         transform: scale(0.98);
       }
 
@@ -175,6 +183,15 @@
       .btn-box a {
         font-size: 0.85rem;
         padding: 7px 12px;
+      }
+    }
+
+    @media print {
+      .btn-box {
+        display: none;
+      }
+      .overlay {
+        background: rgba(255, 255, 255, 0.9);
       }
     }
   </style>
@@ -216,49 +233,51 @@
         const currentURL = window.location.origin + window.location.pathname + "?id=" + encodeURIComponent(id);
 
         container.innerHTML = `
-          <div id="idCard" class="id-card">
-            <div class="college-header">
-              <div class="college-name">${s["college name"] || ""}</div>
-              ${s["logo"] ? `<img src="${s["logo"]}" alt="logo" crossorigin="anonymous">` : ""}
-            </div>
+          <div id="idCard" class="id-card" style="background-image:url('${s["logo"] || ""}');">
+            <div class="overlay">
+              <div class="college-header">
+                <div class="college-name">${s["college name"] || ""}</div>
+                ${s["logo"] ? `<img src="${s["logo"]}" alt="logo" crossorigin="anonymous">` : ""}
+              </div>
 
-            <div class="id-title">🎓 Student ID Card</div>
+              <div class="id-title">🎓 Student ID Card</div>
 
-            <div class="photo-box">
-              ${s["photo"] ? `<img src="${s["photo"]}" alt="photo" crossorigin="anonymous">` : ""}
-            </div>
+              <div class="photo-box">
+                ${s["photo"] ? `<img src="${s["photo"]}" alt="photo" crossorigin="anonymous">` : ""}
+              </div>
 
-            <div class="info">
-              <p><strong>ID No:</strong> ${s["id no"]}</p>
-              <p><strong>Name:</strong> ${s["name"]}</p>
-              <p><strong>Father:</strong> ${s["father"]}</p>
-              <p><strong>Mother:</strong> ${s["mother"]}</p>
-              <p><strong>Roll:</strong> ${s["roll"]}</p>
-              <p><strong>Course:</strong> ${s["course"]}</p>
-              <p><strong>Branch:</strong> ${s["branch"]}</p>
-              <p><strong>DOB:</strong> ${s["dob"]}</p>
-              <p><strong>Session:</strong> ${s["session"]}</p>
-              <p><strong>Address:</strong> ${s["address"]}</p>
-              <p><strong>Phone:</strong> ${s["phone"]}</p>
-              <p><strong>Valid Upto:</strong> ${s["valid upto"]}</p>
-            </div>
+              <div class="info">
+                <p><strong>ID No:</strong> ${s["id no"]}</p>
+                <p><strong>Name:</strong> ${s["name"]}</p>
+                <p><strong>Father:</strong> ${s["father"]}</p>
+                <p><strong>Mother:</strong> ${s["mother"]}</p>
+                <p><strong>Roll:</strong> ${s["roll"]}</p>
+                <p><strong>Course:</strong> ${s["course"]}</p>
+                <p><strong>Branch:</strong> ${s["branch"]}</p>
+                <p><strong>DOB:</strong> ${s["dob"]}</p>
+                <p><strong>Session:</strong> ${s["session"]}</p>
+                <p><strong>Address:</strong> ${s["address"]}</p>
+                <p><strong>Phone:</strong> ${s["phone"]}</p>
+                <p><strong>Valid Upto:</strong> ${s["valid upto"]}</p>
+              </div>
 
-            <div class="institute-info">
-              <hr style="width:85%;margin:4px auto;border:0.5px solid #ddd;">
-              <p><strong>Institute Address:</strong> ${s["institute address"] || ""}</p>
-              <p><strong>Institute Phone:</strong> ${s["institute phone"] || ""}</p>
-              <p><strong>Institute Email:</strong> ${s["institute email"] || ""}</p>
-            </div>
+              <div class="institute-info">
+                <hr style="width:85%;margin:4px auto;border:0.5px solid #ddd;">
+                <p><strong>Institute Address:</strong> ${s["institute address"] || ""}</p>
+                <p><strong>Institute Phone:</strong> ${s["institute phone"] || ""}</p>
+                <p><strong>Institute Email:</strong> ${s["institute email"] || ""}</p>
+              </div>
 
-            <div class="qr-box">
-              <canvas id="qrCanvas"></canvas>
-            </div>
+              <div class="qr-box">
+                <canvas id="qrCanvas"></canvas>
+              </div>
 
-            <div class="btn-box">
-              <a id="downloadQR">Download QR</a>
-              <a id="downloadCard">Download PNG</a>
-              <a id="downloadPDF">Download PDF</a>
-              <a id="printCard">Print ID</a>
+              <div class="btn-box">
+                <a id="downloadQR">Download QR</a>
+                <a id="downloadCard">Download PNG</a>
+                <a id="downloadPDF">Download PDF</a>
+                <a id="printCard">Print ID</a>
+              </div>
             </div>
           </div>
         `;
