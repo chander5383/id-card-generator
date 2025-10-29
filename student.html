@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Student ID Card</title>
 
   <!-- Libraries -->
@@ -27,19 +28,40 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      overflow-x: hidden;
+      padding: 15px 0;
+    }
+
+    /* Back Button */
+    .back-btn {
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 8px;
+      padding: 8px 14px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      z-index: 10;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .back-btn:hover {
+      background: #063b8b;
     }
 
     .id-card {
       background: #fff;
       width: 95%;
-      max-width: 400px;
+      max-width: 380px;
       border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-      padding: 18px;
-      position: relative;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      padding: 16px;
       overflow: hidden;
       text-align: center;
       transition: all 0.3s;
+      transform: scale(1);
     }
 
     .college-header {
@@ -116,7 +138,7 @@
     .btn-box a {
       background: var(--primary);
       color: #fff;
-      padding: 8px 16px;
+      padding: 8px 14px;
       border-radius: 8px;
       text-decoration: none;
       font-size: 0.9rem;
@@ -128,11 +150,12 @@
       background: #063b8b;
     }
 
-    /* Mobile responsive improvements */
-    @media (max-width: 480px) {
+    /* Mobile Responsiveness */
+    @media (max-width: 500px) {
       .id-card {
-        max-width: 95%;
+        max-width: 92%;
         padding: 12px;
+        transform: scale(0.98);
       }
 
       .college-header img {
@@ -150,14 +173,16 @@
       }
 
       .btn-box a {
-        padding: 8px 14px;
         font-size: 0.85rem;
+        padding: 7px 12px;
       }
     }
   </style>
 </head>
 
 <body>
+  <a href="index.html" class="back-btn">← Back to Home</a>
+
   <main id="student-detail">Loading student details...</main>
 
   <script>
