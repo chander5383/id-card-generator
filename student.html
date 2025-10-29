@@ -94,6 +94,8 @@
           return;
         }
 
+        const currentURL = window.location.origin + window.location.pathname + "?id=" + encodeURIComponent(id);
+
         container.innerHTML = `
           <div id="idCard" class="id-card" style="--watermark-url: url('${s["logo"] || ""}')">
             <div class="college-header">
@@ -137,14 +139,15 @@
               <a id="downloadQR">Download QR</a>
               <a id="downloadCard">Download PNG</a>
               <a id="downloadPDF">Download PDF</a>
+              <a id="printCard">Print ID</a>
             </div>
           </div>
         `;
 
-        // ✅ QR Code via Qrious
+        // ✅ QR Code contains direct page link
         const qr = new QRious({
           element: document.getElementById("qrCanvas"),
-          value: `ID: ${s["id no"]}\nName: ${s["name"]}\nBranch: ${s["branch"]}\nCollege: ${s["college name"]}`,
+          value: currentURL,
           size: 160,
         });
 
@@ -159,7 +162,6 @@
         // ✅ Download PNG
         document.getElementById("downloadCard").addEventListener("click", async () => {
           const card = document.getElementById("idCard");
-          await new Promise(r => setTimeout(r, 1000));
           const canvas = await html2canvas(card, { scale: 3, useCORS: true });
           const imgData = canvas.toDataURL("image/png");
           const link = document.createElement("a");
@@ -176,6 +178,11 @@
           const pdf = new jspdf.jsPDF({ orientation: "portrait", unit: "px", format: [420, 600] });
           pdf.addImage(imgData, "PNG", 20, 20, 380, 560);
           pdf.save(`${s["id no"]}_ID.pdf`);
+        });
+
+        // ✅ Print ID Card
+        document.getElementById("printCard").addEventListener("click", () => {
+          window.print();
         });
       },
     });
