@@ -3,301 +3,187 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Student Full ID</title>
+  <title>C.M.R.B. Government Polytechnic College - Student ID</title>
 
-  <!-- External Libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-  <!-- Font -->
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
     body {
-      background: #eef3f9;
       font-family: "Poppins", sans-serif;
-      color: #222;
-      margin: 0;
+      background: #f6f8fa;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
+      justify-content: flex-start;
+      padding: 20px;
       min-height: 100vh;
     }
-
     .id-card {
       position: relative;
-      width: 380px;
-      max-width: 95%;
-      padding: 14px 18px;
-      border-radius: 14px;
-      background: #fff;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      width: 320px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
       overflow: hidden;
+      margin-top: 20px;
+      border: 2px solid #003366;
+    }
+    .header {
+      background: #003366;
+      color: white;
+      padding: 10px;
       text-align: center;
-    }
-
-    .id-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: var(--watermark-url) center/70% no-repeat;
-      opacity: 0.08;
-      z-index: 0;
-    }
-
-    .college-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 4px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .college-name {
-      font-weight: 700;
-      color: #004080;
-      font-size: 1.05rem;
-      text-align: left;
-      flex: 1;
-    }
-
-    .college-header img {
-      width: 65px;
-      height: 65px;
-      object-fit: contain;
-    }
-
-    .id-title {
-      font-size: 1rem;
       font-weight: 600;
-      color: #0a58ca;
-      margin-bottom: 6px;
-      background: #eaf2ff;
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 6px;
     }
-
     .photo-box {
-      display: flex;
-      justify-content: center;
-      z-index: 1;
-      margin-top: 2px;
-      margin-bottom: 2px;
+      text-align: center;
+      margin: 10px 0;
     }
-
     .photo-box img {
-      width: 110px;
-      height: 110px;
-      border-radius: 50%;
+      width: 100px;
+      height: 100px;
       object-fit: cover;
-      border: 2px solid #ccc;
+      border-radius: 50%;
+      border: 2px solid #003366;
     }
-
     .info {
-      text-align: left;
-      margin-top: 4px;
-      padding: 0 8%;
-      font-size: 0.85rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    .info p {
-      margin: 2px 0;
-    }
-
-    .institute-info {
-      text-align: left;
-      font-size: 0.85rem;
-      margin-top: 2px;
-      padding: 0 8%;
+      padding: 10px 20px;
       color: #222;
-      z-index: 1;
-      position: relative;
-    }
-
-    .institute-info p {
-      margin: 2px 0;
-    }
-
-    .btn-box {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-      z-index: 1;
-      position: relative;
-    }
-
-    .btn-box a {
-      background: #0a58ca;
-      color: #fff;
-      padding: 8px 16px;
-      border-radius: 6px;
-      text-decoration: none;
       font-size: 0.9rem;
-      transition: background 0.3s;
+    }
+    .info p {
+      margin: 5px 0;
+    }
+    .qr-box {
+      text-align: center;
+      margin: 10px;
+    }
+    .qr-box canvas {
+      margin: auto;
+    }
+    button {
+      background: #003366;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      margin: 5px;
       cursor: pointer;
+      font-weight: 600;
     }
-
-    .btn-box a:hover {
-      background: #063b8b;
-    }
-
-    @media (max-width: 400px) {
-      .id-card { padding: 10px; font-size: 0.8rem; }
-      .photo-box img { width: 90px; height: 90px; }
+    button:hover {
+      background: #002244;
     }
   </style>
 </head>
-
 <body>
-  <main id="student-detail">Loading student details...</main>
+  <h2>C.M.R.B. Government Polytechnic College - Student ID</h2>
+  <input type="text" id="studentId" placeholder="Enter ID / Roll No" />
+  <button onclick="generateCard()">Generate ID Card</button>
+
+  <div id="idCardContainer"></div>
+
+  <!-- Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <script>
-    const SHEET_CSV_URL =
-      "https://docs.google.com/spreadsheets/d/1mFO4VfkTJRbWyToBP2BSobb44HVDVfPrL04R7UdflYg/export?format=csv&gid=0";
+    const sheetUrl =
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vSXDb97QhduHuHnQnpG6SnjJzvXUQmN4nmiRyHnBTKXOd7hKqZ_oN0KnS1pyzTksRoeaKkeRvNlZg27/pub?output=csv";
 
-    const id = new URLSearchParams(window.location.search).get("id");
+    async function generateCard() {
+      const studentId = document.getElementById("studentId").value.trim();
+      if (!studentId) {
+        alert("Please enter an ID or Roll Number.");
+        return;
+      }
 
-    Papa.parse(SHEET_CSV_URL, {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      complete: (results) => {
-        const data = results.data.map(r => {
-          const clean = {};
-          Object.keys(r).forEach(k => clean[k.trim().toLowerCase()] = (r[k] || "").trim());
-          return clean;
-        });
+      const container = document.getElementById("idCardContainer");
+      container.innerHTML = "<p>Loading data...</p>";
 
-        const s = data.find(st =>
-          (st["id no"] && st["id no"].trim() === id.trim()) ||
-          (st["id"] && st["id"].trim() === id.trim()) ||
-          (st["roll"] && st["roll"].trim() === id.trim())
-        );
-
-        const container = document.getElementById("student-detail");
-        if (!s) {
-          container.innerHTML = `<p style="text-align:center;color:red;font-weight:bold;">❌ Student not found.</p>`;
-          return;
-        }
-
-        container.innerHTML = `
-          <div id="idCard" class="id-card" style="--watermark-url: url('${s["logo"] || ""}')">
-            <div class="college-header">
-              <div class="college-name">${s["college name"] || ""}</div>
-              ${s["logo"] ? `<img src="${s["logo"]}" alt="logo" crossorigin="anonymous">` : ""}
-            </div>
-
-            <div class="id-title">🎓 Student ID Card</div>
-
-            <div class="photo-box">
-              ${s["photo"] ? `<img src="${s["photo"]}" alt="photo" crossorigin="anonymous">` : ""}
-            </div>
-
-            <hr style="width:80%;margin:2px auto;border:0.5px solid #ddd;">
-
-            <div class="info">
-              <p><strong>ID No:</strong> ${s["id no"]}</p>
-              <p><strong>Name:</strong> ${s["name"]}</p>
-              <p><strong>Father:</strong> ${s["father"]}</p>
-              <p><strong>Mother:</strong> ${s["mother"]}</p>
-              <p><strong>Roll:</strong> ${s["roll"]}</p>
-              <p><strong>Course:</strong> ${s["course"]}</p>
-              <p><strong>Branch:</strong> ${s["branch"]}</p>
-              <p><strong>DOB:</strong> ${s["dob"]}</p>
-              <p><strong>Session:</strong> ${s["session"]}</p>
-              <p><strong>Address:</strong> ${s["address"]}</p>
-              <p><strong>Phone:</strong> ${s["phone"]}</p>
-              <p><strong>Valid Upto:</strong> ${s["valid upto"]}</p>
-            </div>
-
-            <div class="institute-info">
-              <hr style="width:80%;margin:2px auto;border:0.5px solid #ddd;">
-              <p><strong>Institute Address:</strong> ${s["institute address"] || ""}</p>
-              <p><strong>Institute Phone:</strong> ${s["institute phone"] || ""}</p>
-              <p><strong>Institute Email:</strong> ${s["institute email"] || ""}</p>
-            </div>
-
-            <div class="btn-box">
-              <a id="downloadQR">Download QR</a>
-              <a id="downloadCard">Download PNG</a>
-              <a id="downloadPDF">Download PDF</a>
-            </div>
-          </div>
-        `;
-
-        // ✅ Generate QR
-        const qrCanvas = document.createElement("canvas");
-        const qrData = `
-ID: ${s["id no"]}
-Name: ${s["name"]}
-Branch: ${s["branch"]}
-College: ${s["college name"]}
-Phone: ${s["phone"]}
-        `;
-        QRCode.toCanvas(qrCanvas, qrData, { width: 200, margin: 2 }, (error) => {
-          if (error) console.error(error);
-        });
-
-        // ✅ QR Download
-        document.getElementById("downloadQR").addEventListener("click", () => {
-          const qrImg = qrCanvas.toDataURL("image/png");
-          const a = document.createElement("a");
-          a.href = qrImg;
-          a.download = `${s["id no"] || "qr"}.png`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-        });
-
-        // ✅ Helper function to render the card to canvas safely
-        async function captureCard() {
-          const card = document.getElementById("idCard");
-          await Promise.all(Array.from(card.querySelectorAll("img")).map(img => {
-            if (img.complete) return Promise.resolve();
-            return new Promise(res => img.onload = img.onerror = res);
-          }));
-          return await html2canvas(card, {
-            scale: 3,
-            useCORS: true,
-            backgroundColor: "#fff"
+      Papa.parse(sheetUrl, {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: async function (results) {
+          const data = results.data.map((r) => {
+            Object.keys(r).forEach((k) => {
+              const val = r[k]?.trim();
+              r[k.trim().toLowerCase()] = val;
+            });
+            return r;
           });
-        }
 
-        // ✅ Full ID PNG Download
-        document.getElementById("downloadCard").addEventListener("click", async () => {
-          const canvas = await captureCard();
-          const imgData = canvas.toDataURL("image/png");
-          const a = document.createElement("a");
-          a.href = imgData;
-          a.download = `${s["id no"] || "idcard"}.png`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-        });
+          const student = data.find(
+            (row) =>
+              row["id no"]?.toLowerCase() === studentId.toLowerCase() ||
+              row["id"]?.toLowerCase() === studentId.toLowerCase() ||
+              row["roll"]?.toLowerCase() === studentId.toLowerCase()
+          );
 
-        // ✅ Full ID PDF Download
-        document.getElementById("downloadPDF").addEventListener("click", async () => {
-          const canvas = await captureCard();
-          const imgData = canvas.toDataURL("image/png");
-          const { jsPDF } = window.jspdf;
-          const pdf = new jsPDF({
-            orientation: "portrait",
-            unit: "px",
-            format: [canvas.width / 3, canvas.height / 3]
+          if (!student) {
+            container.innerHTML = "<p style='color:red;'>No record found.</p>";
+            return;
+          }
+
+          container.innerHTML = `
+            <div class="id-card" id="idCard">
+              <div class="header">C.M.R.B. Government Polytechnic College</div>
+              <div class="photo-box">
+                <img src="${student["photo link"] || ""}" onerror="this.src='https://via.placeholder.com/100'" crossorigin="anonymous" />
+              </div>
+              <div class="info">
+                <p><strong>Name:</strong> ${student["name"] || ""}</p>
+                <p><strong>Roll No:</strong> ${student["roll"] || ""}</p>
+                <p><strong>Branch:</strong> ${student["branch"] || ""}</p>
+                <p><strong>Session:</strong> ${student["session"] || ""}</p>
+                <p><strong>ID No:</strong> ${student["id no"] || ""}</p>
+              </div>
+              <div class="qr-box">
+                <canvas id="qrCodeCanvas"></canvas>
+              </div>
+              <div style="text-align:center;">
+                <button onclick="downloadQR()">Download QR</button>
+                <button onclick="downloadPDF()">Download PDF</button>
+              </div>
+            </div>
+          `;
+
+          const qrCanvas = document.getElementById("qrCodeCanvas");
+          await QRCode.toCanvas(qrCanvas, JSON.stringify(student), {
+            width: 120,
+            margin: 1,
           });
-          pdf.addImage(imgData, "PNG", 0, 0, canvas.width / 3, canvas.height / 3);
-          pdf.save(`${s["id no"] || "idcard"}.pdf`);
-        });
-      },
-    });
+        },
+      });
+    }
+
+    // ✅ Download QR as PNG
+    function downloadQR() {
+      const canvas = document.getElementById("qrCodeCanvas");
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/png");
+      link.download = "QR_Code.png";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // ✅ Download full ID as PDF
+    async function downloadPDF() {
+      const idCard = document.getElementById("idCard");
+      const { jsPDF } = window.jspdf;
+      const canvas = await html2canvas(idCard, { scale: 2, useCORS: true });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const width = pdf.internal.pageSize.getWidth();
+      const height = (canvas.height * width) / canvas.width;
+      pdf.addImage(imgData, "PNG", 0, 20, width, height);
+      pdf.save("Student_ID.pdf");
+    }
   </script>
 </body>
 </html>
