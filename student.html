@@ -46,9 +46,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      z-index: 1;
-      position: relative;
       margin-bottom: 4px;
+      position: relative;
+      z-index: 1;
     }
 
     .college-name {
@@ -124,7 +124,7 @@
       justify-content: center;
       gap: 8px;
       flex-wrap: wrap;
-      margin-top: 8px;
+      margin-top: 10px;
       z-index: 1;
       position: relative;
     }
@@ -132,11 +132,12 @@
     .btn-box a {
       background: #0a58ca;
       color: #fff;
-      padding: 6px 12px;
+      padding: 8px 16px;
       border-radius: 6px;
       text-decoration: none;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       transition: background 0.3s;
+      cursor: pointer;
     }
 
     .btn-box a:hover {
@@ -216,12 +217,13 @@
             </div>
 
             <div class="btn-box">
-              <a id="downloadQR" href="#">Download QR</a>
-              <a id="downloadCard" href="#">Download Full ID</a>
+              <a id="downloadQR">Download QR</a>
+              <a id="downloadCard">Download Full ID</a>
             </div>
           </div>
         `;
 
+        // Generate QR
         const qrCanvas = document.createElement("canvas");
         const qrData = `
 ID: ${s["id no"]}
@@ -230,26 +232,32 @@ Branch: ${s["branch"]}
 College: ${s["college name"]}
 Phone: ${s["phone"]}
         `;
-        QRCode.toCanvas(qrCanvas, qrData, { width: 120, margin: 1 }, (error) => {
+        QRCode.toCanvas(qrCanvas, qrData, { width: 160, margin: 1 }, (error) => {
           if (error) console.error(error);
         });
 
-        document.getElementById("downloadQR").addEventListener("click", (e) => {
-          e.preventDefault();
+        // ✅ QR download button (auto-save)
+        document.getElementById("downloadQR").addEventListener("click", () => {
+          const qrImg = qrCanvas.toDataURL("image/png");
           const link = document.createElement("a");
+          link.href = qrImg;
           link.download = `${s["id no"] || "qr"}.png`;
-          link.href = qrCanvas.toDataURL("image/png");
+          document.body.appendChild(link);
           link.click();
+          document.body.removeChild(link);
         });
 
-        document.getElementById("downloadCard").addEventListener("click", (e) => {
-          e.preventDefault();
+        // ✅ Full ID download (auto-save)
+        document.getElementById("downloadCard").addEventListener("click", () => {
           const card = document.getElementById("idCard");
           html2canvas(card, { scale: 3, useCORS: true, backgroundColor: "#fff" }).then((canvas) => {
+            const imgData = canvas.toDataURL("image/png");
             const link = document.createElement("a");
+            link.href = imgData;
             link.download = `${s["id no"] || "idcard"}.png`;
-            link.href = canvas.toDataURL("image/png");
+            document.body.appendChild(link);
             link.click();
+            document.body.removeChild(link);
           });
         });
       },
