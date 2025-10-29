@@ -82,3 +82,21 @@ body.dark .loader{border-top:5px solid #5aa0ff}
   .action-buttons{justify-content:flex-end}
   .search-container input{font-size:0.95rem}
 }
+/* ====== Background Logo in Full ID Card ====== */
+.id-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.id-card .overlay {
+  position: relative;
+  background: rgba(255, 255, 255, 0.92); /* translucent white for readability */
+  border-radius: 16px;
+  padding: 16px;
+}
+
+@media print {
+  .id-card .overlay {
+    background: rgba(255, 255, 255, 0.9);
+  }
+}
