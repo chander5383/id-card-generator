@@ -1,13 +1,17 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Student Full ID</title>
+
+  <!-- External Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
     body {
@@ -143,8 +147,12 @@
     .btn-box a:hover {
       background: #063b8b;
     }
-  </style>
 
+    @media (max-width: 400px) {
+      .id-card { padding: 10px; font-size: 0.8rem; }
+      .photo-box img { width: 90px; height: 90px; }
+    }
+  </style>
 </head>
 
 <body>
@@ -183,13 +191,13 @@
           <div id="idCard" class="id-card" style="--watermark-url: url('${s["logo"] || ""}')">
             <div class="college-header">
               <div class="college-name">${s["college name"] || ""}</div>
-              ${s["logo"] ? `<img src="${s["logo"]}" alt="logo">` : ""}
+              ${s["logo"] ? `<img src="${s["logo"]}" alt="logo" crossorigin="anonymous">` : ""}
             </div>
 
             <div class="id-title">🎓 Student ID Card</div>
 
             <div class="photo-box">
-              ${s["photo"] ? `<img src="${s["photo"]}" alt="photo">` : ""}
+              ${s["photo"] ? `<img src="${s["photo"]}" alt="photo" crossorigin="anonymous">` : ""}
             </div>
 
             <hr style="width:80%;margin:2px auto;border:0.5px solid #ddd;">
@@ -223,7 +231,7 @@
           </div>
         `;
 
-        // Generate QR
+        // ✅ Generate QR
         const qrCanvas = document.createElement("canvas");
         const qrData = `
 ID: ${s["id no"]}
@@ -232,38 +240,47 @@ Branch: ${s["branch"]}
 College: ${s["college name"]}
 Phone: ${s["phone"]}
         `;
-        QRCode.toCanvas(qrCanvas, qrData, { width: 160, margin: 1 }, (error) => {
+        QRCode.toCanvas(qrCanvas, qrData, { width: 200, margin: 2 }, (error) => {
           if (error) console.error(error);
         });
 
         // ✅ QR Download
-        document.getElementById("downloadQR").addEventListener("click", async () => {
+        document.getElementById("downloadQR").addEventListener("click", () => {
           const qrImg = qrCanvas.toDataURL("image/png");
-          const link = document.createElement("a");
-          link.href = qrImg;
-          link.download = `${s["id no"] || "qr"}.png`;
-          document.body.appendChild(link);
-          link.click();
-          await new Promise(r => setTimeout(r, 200));
-          document.body.removeChild(link);
+          const a = document.createElement("a");
+          a.href = qrImg;
+          a.download = `${s["id no"] || "qr"}.png`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
         });
 
         // ✅ Full ID Download
         document.getElementById("downloadCard").addEventListener("click", async () => {
           const card = document.getElementById("idCard");
-          const canvas = await html2canvas(card, { scale: 3, useCORS: true, backgroundColor: "#fff" });
+
+          // Wait for images to fully load
+          await Promise.all(Array.from(card.querySelectorAll("img")).map(img => {
+            if (img.complete) return Promise.resolve();
+            return new Promise(res => img.onload = img.onerror = res);
+          }));
+
+          const canvas = await html2canvas(card, {
+            scale: 3,
+            useCORS: true,
+            backgroundColor: "#fff"
+          });
+
           const imgData = canvas.toDataURL("image/png");
-          const link = document.createElement("a");
-          link.href = imgData;
-          link.download = `${s["id no"] || "idcard"}.png`;
-          document.body.appendChild(link);
-          link.click();
-          await new Promise(r => setTimeout(r, 200));
-          document.body.removeChild(link);
+          const a = document.createElement("a");
+          a.href = imgData;
+          a.download = `${s["id no"] || "idcard"}.png`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
         });
       },
     });
   </script>
-
 </body>
 </html>
