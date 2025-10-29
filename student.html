@@ -1,24 +1,15 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Student Full ID</title>
 
-  <!-- Libraries -->
-
+  <!-- ✅ Load PapaParse and html2canvas first -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-  <!-- Font -->
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- ✅ Load QRCode library last -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 
   <style>
     body {
@@ -155,7 +146,6 @@
       background: #063b8b;
     }
   </style>
-
 </head>
 
 <body>
@@ -194,13 +184,13 @@
           <div id="idCard" class="id-card" style="--watermark-url: url('${s["logo"] || ""}')">
             <div class="college-header">
               <div class="college-name">${s["college name"] || ""}</div>
-              ${s["logo"] ? `<img src="${s["logo"]}" crossorigin="anonymous" alt="logo">` : ""}
+              ${s["logo"] ? `<img src="${s["logo"]}" alt="logo" crossorigin="anonymous">` : ""}
             </div>
 
             <div class="id-title">🎓 Student ID Card</div>
 
             <div class="photo-box">
-              ${s["photo"] ? `<img src="${s["photo"]}" crossorigin="anonymous" alt="photo">` : ""}
+              ${s["photo"] ? `<img src="${s["photo"]}" alt="photo" crossorigin="anonymous">` : ""}
             </div>
 
             <hr style="width:80%;margin:2px auto;border:0.5px solid #ddd;">
@@ -229,13 +219,17 @@
 
             <div class="btn-box">
               <a id="downloadQR">Download QR</a>
-              <a id="downloadCard">Download PNG</a>
-              <a id="downloadPDF">Download PDF</a>
+              <a id="downloadCard">Download Full ID</a>
             </div>
           </div>
         `;
 
-        // Generate QR
+        // ✅ Generate QR safely
+        if (typeof QRCode === "undefined") {
+          alert("QRCode library not loaded. Please refresh page.");
+          return;
+        }
+
         const qrCanvas = document.createElement("canvas");
         const qrData = `
 ID: ${s["id no"]}
@@ -260,10 +254,10 @@ Phone: ${s["phone"]}
           document.body.removeChild(link);
         });
 
-        // ✅ Full ID (PNG)
+        // ✅ Full ID Download (with delay for image load)
         document.getElementById("downloadCard").addEventListener("click", async () => {
           const card = document.getElementById("idCard");
-          await new Promise(r => setTimeout(r, 1000)); // wait for image load
+          await new Promise(r => setTimeout(r, 1000)); // wait 1s for image load
           const canvas = await html2canvas(card, { scale: 3, useCORS: true, backgroundColor: "#fff" });
           const imgData = canvas.toDataURL("image/png");
           const link = document.createElement("a");
@@ -274,22 +268,8 @@ Phone: ${s["phone"]}
           await new Promise(r => setTimeout(r, 200));
           document.body.removeChild(link);
         });
-
-        // ✅ Full ID (PDF)
-        document.getElementById("downloadPDF").addEventListener("click", async () => {
-          const card = document.getElementById("idCard");
-          await new Promise(r => setTimeout(r, 1000)); // wait for image load
-          const canvas = await html2canvas(card, { scale: 3, useCORS: true, backgroundColor: "#fff" });
-          const imgData = canvas.toDataURL("image/png");
-          const pdf = new jspdf.jsPDF("p", "mm", "a4");
-          const width = pdf.internal.pageSize.getWidth();
-          const height = (canvas.height * width) / canvas.width;
-          pdf.addImage(imgData, "PNG", 10, 10, width - 20, height);
-          pdf.save(`${s["id no"] || "idcard"}.pdf`);
-        });
       },
     });
   </script>
-
 </body>
 </html>
